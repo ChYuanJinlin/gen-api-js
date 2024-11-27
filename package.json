@@ -1,6 +1,6 @@
 {
   "name": "gen-api-js",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "根据线上接口文档轻量化简易一键批量生成模块化 JavaScript/TypeScript API接口",
   "bin": {
     "gen-api": "bin/cli.js"
@@ -12,8 +12,7 @@
     "commit": "git-cz",
     "start": "npm run build  && npx gen-api",
     "copy-config": "ncp src/config dist/config",
-    "build": "babel src --out-dir dist && npm run copy-config",
-    "release": "standard-version"
+    "build": "babel src --out-dir dist && npm run copy-config"
   },
   "files": [
     "dist/",
