@@ -41,7 +41,7 @@
   "author": "1075360356@qq.com",
   "repository": {
     "type": "github",
-    "url": "https://github.com/ChYuanJinlin/gen-yapi"
+    "url": "https://github.com/ChYuanJinlin/gen-api-js"
   },
   "license": "MIT",
   "dependencies": {
@@ -58,7 +58,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://github.com/ChYuanJinlin/gen-yapi.git"
+    "registry": "https://github.com/ChYuanJinlin/gen-api-js.git"
   },
   "engines": {
     "node": ">=14.15.0",

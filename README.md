@@ -1,7 +1,7 @@
-# gen-api
+# gen-api-js
 
-[![NPM Version](https://img.shields.io/npm/v/%40yuanjinlin%2Fgen-api?logo=npm)](https://www.npmjs.com/package/gen-api-js) ![Node Current](https://img.shields.io/node/v/%40yuanjinlin%2Fgen-api?logo=nodedotjs&color=blue)
-![NPM License](https://img.shields.io/npm/l/%40yuanjinlin%2Fgen-api)
+[![NPM Version](https://img.shields.io/npm/v/gen-api-js?logo=npm)](https://www.npmjs.com/package/gen-api-js) ![Node Current](https://img.shields.io/node/v/gen-api-js?logo=nodedotjs&color=blue)
+![NPM License](https://img.shields.io/npm/l/gen-api-js)
 
 ## 介绍
 
