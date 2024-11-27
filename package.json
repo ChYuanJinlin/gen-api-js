@@ -12,7 +12,8 @@
     "commit": "git-cz",
     "start": "npm run build  && npx gen-api",
     "copy-config": "ncp src/config dist/config",
-    "build": "babel src --out-dir dist && npm run copy-config"
+    "build": "babel src --out-dir dist && npm run copy-config",
+    "push":"git add . && npm run commit && npx release-it "
   },
   "files": [
     "dist/",
