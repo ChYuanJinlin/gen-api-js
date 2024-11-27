@@ -1,0 +1,10 @@
+node_modules
+.history
+.DS_Store
+.env
+.lh
+.history
+package-lock.json
+api.config.js
+api.data
+api.data.json

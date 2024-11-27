@@ -1,0 +1,151 @@
+{
+  "name": "gen-api-js",
+  "version": "0.0.0",
+  "description": "根据线上接口文档轻量化简易一键批量生成模块化 JavaScript/TypeScript API接口",
+  "bin": {
+    "gen-api": "bin/cli.js"
+  },
+  "module": "es2022",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "commit": "git-cz",
+    "start": "npm run build  && npx gen-api",
+    "copy-config": "ncp src/config dist/config",
+    "build": "babel src --out-dir dist && npm run copy-config",
+    "release": "standard-version"
+  },
+  "files": [
+    "dist/",
+    "package.json",
+    "yapi.png",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+    "bin/"
+  ],
+  "keywords": [
+    "简易api接口生成器",
+    "接口生成器",
+    "api",
+    "线上接口文档生成",
+    "生成javascript或typescript接口代码",
+    "yapi接口生成器",
+    "批量生成接口",
+    "批量生API",
+    "一键生成接口",
+    "轻量化",
+    "yapi"
+  ],
+  "homepage": "",
+  "author": "1075360356@qq.com",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/ChYuanJinlin/gen-yapi"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime": "^7.26.0",
+    "@release-it/conventional-changelog": "^8.0.1",
+    "commander": "^7.2.0",
+    "core-js": "^3.39.0",
+    "dotenv": "^16.4.5",
+    "inquirer": "^6.5.2",
+    "node-cache": "^5.1.2",
+    "ora": "^3.4.0",
+    "puppeteer-core": "^20.4.0",
+    "quicktype-core": "^23.0.170"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://github.com/ChYuanJinlin/gen-yapi.git"
+  },
+  "engines": {
+    "node": ">=14.15.0",
+    "npm": ">=6.14.8"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.25.9",
+    "@babel/core": "^7.26.0",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
+    "@babel/plugin-proposal-private-methods": "^7.18.6",
+    "@babel/plugin-transform-modules-commonjs": "^7.25.9",
+    "@babel/plugin-transform-runtime": "^7.25.9",
+    "@babel/preset-env": "^7.26.0",
+    "@types/node": "^22.9.1",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "commitizen": "^4.3.1",
+    "ncp": "^2.0.0",
+    "prettier": "^3.2.5",
+    "standard-version": "^9.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "standard-version": {
+    "scripts": {
+      "postchangelog": "git add CHANGELOG.md"
+    },
+    "types": [
+      {
+        "type": "chore",
+        "section": "Others",
+        "hidden": false
+      },
+      {
+        "type": "revert",
+        "section": "Reverts",
+        "hidden": false
+      },
+      {
+        "type": "feat",
+        "section": "Features",
+        "hidden": false
+      },
+      {
+        "type": "fix",
+        "section": "Bug Fixes",
+        "hidden": false
+      },
+      {
+        "type": "improvement",
+        "section": "Feature Improvements",
+        "hidden": false
+      },
+      {
+        "type": "docs",
+        "section": "Docs",
+        "hidden": false
+      },
+      {
+        "type": "style",
+        "section": "Styling",
+        "hidden": false
+      },
+      {
+        "type": "refactor",
+        "section": "Code Refactoring",
+        "hidden": false
+      },
+      {
+        "type": "perf",
+        "section": "Performance Improvements",
+        "hidden": false
+      },
+      {
+        "type": "test",
+        "section": "Tests",
+        "hidden": false
+      },
+      {
+        "type": "build",
+        "section": "Build System",
+        "hidden": false
+      },
+      {
+        "type": "ci",
+        "section": "CI",
+        "hidden": false
+      }
+    ]
+  }
+}
