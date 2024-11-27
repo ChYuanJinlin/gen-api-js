@@ -18,14 +18,14 @@ const getFilenames = (dir, callback) => {
 
   fs.readdir(dir, (err, files) => {
     if (err) throw err;
-    files.forEach((file) => {
+    files.forEach((file,index) => {
       let fullPath = path.join(dir, file);
       fs.stat(fullPath, (err, stats) => {
         if (err) throw err;
         if (stats.isDirectory()) {
           getFilenames(fullPath, callback);
         } else {
-          callback(fullPath);
+          callback(fullPath,files,index);
         }
       });
     });

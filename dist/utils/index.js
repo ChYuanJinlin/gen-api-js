@@ -23,14 +23,14 @@ var _getFilenames = function getFilenames(dir, callback) {
   ensureDirectoryExistence(dir);
   fs.readdir(dir, function (err, files) {
     if (err) throw err;
-    files.forEach(function (file) {
+    files.forEach(function (file, index) {
       var fullPath = path.join(dir, file);
       fs.stat(fullPath, function (err, stats) {
         if (err) throw err;
         if (stats.isDirectory()) {
           _getFilenames(fullPath, callback);
         } else {
-          callback(fullPath);
+          callback(fullPath, files, index);
         }
       });
     });
