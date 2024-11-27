@@ -72,93 +72,23 @@
     "@babel/plugin-transform-modules-commonjs": "^7.25.9",
     "@babel/plugin-transform-runtime": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
     "@types/node": "^22.9.1",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "commitizen": "^4.3.1",
+    "husky": "^9.1.7",
     "ncp": "^2.0.0",
     "prettier": "^3.2.5",
+    "release-it": "^17.2.1",
     "semantic-release": "^24.2.0",
     "standard-version": "^9.5.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },
-  "release": {
-    "branches": ["master"],
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      "@semantic-release/git",
-      "@semantic-release/github"
-    ]
-  },
-  "standard-version": {
-    "scripts": {
-      "postchangelog": "git add CHANGELOG.md"
-    },
-    "types": [
-      {
-        "type": "chore",
-        "section": "Others",
-        "hidden": false
-      },
-      {
-        "type": "revert",
-        "section": "Reverts",
-        "hidden": false
-      },
-      {
-        "type": "feat",
-        "section": "Features",
-        "hidden": false
-      },
-      {
-        "type": "fix",
-        "section": "Bug Fixes",
-        "hidden": false
-      },
-      {
-        "type": "improvement",
-        "section": "Feature Improvements",
-        "hidden": false
-      },
-      {
-        "type": "docs",
-        "section": "Docs",
-        "hidden": false
-      },
-      {
-        "type": "style",
-        "section": "Styling",
-        "hidden": false
-      },
-      {
-        "type": "refactor",
-        "section": "Code Refactoring",
-        "hidden": false
-      },
-      {
-        "type": "perf",
-        "section": "Performance Improvements",
-        "hidden": false
-      },
-      {
-        "type": "test",
-        "section": "Tests",
-        "hidden": false
-      },
-      {
-        "type": "build",
-        "section": "Build System",
-        "hidden": false
-      },
-      {
-        "type": "ci",
-        "section": "CI",
-        "hidden": false
-      }
-    ]
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
