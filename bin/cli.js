@@ -18,13 +18,15 @@ if (process.argv.length > 2) {
     .description("初始化配置文件 ")
     .option("--axios <path>", "创建axios文件")
     .action((options) => {
-      console.log(process.argv);
-      if (!options.axios) {
-        console.log("请传入你的路径！");
-      } else {
-        createfolderFile(options.axios, axiosData);
-        console.log("创建axios文件成功");
+      if (process.argv.length >= 4) {
+        if (!options.axios) {
+          console.log("请传入你的路径！");
+        } else {
+          createfolderFile(options.axios, axiosData);
+          console.log("创建axios文件成功");
+        }
       }
+
       if (fs.existsSync(path.join(process.cwd(), "api.config.js"))) {
         console.log("配置文件已存在");
         process.exit();

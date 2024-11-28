@@ -3,9 +3,13 @@
 [![NPM Version](https://img.shields.io/npm/v/gen-api-js?logo=npm)](https://www.npmjs.com/package/gen-api-js) ![Node Current](https://img.shields.io/node/v/gen-api-js?logo=nodedotjs&color=blue)
 ![NPM License](https://img.shields.io/npm/l/gen-api-js)
 
+## 前言
+
+为什么要开发这款工具? 传统前端每次和后端对接接口，如后端把接口文档放在线上文档，前端要去线上文档去复制接口的路径，然后又去前端的项目去写接口函数写注释这些，依次循环，如果后端的接口很多如二十、三十个这种， 你要复制二三十遍，这样不仅效率低而且还是个重复性乏味的劳动工作，为了解决这个问题 我开发了 了`gen-api-js` 它可以帮助你做这些事，对于大批量接口它可以给你很好的支持,但不过很遗憾的是 `gen-api-js` 它现在只支持 `yapi`,后续有需要将会支持更多的线上文档,敬请期待...
+
 ## 介绍
 
-> <span style="color：#4569d4">gen-api</span>是一个代码生成工具，基于 [puppeteerjs](http://puppeteerjs.com/#?product=Puppeteer&version=puppeteer-v21.4.1)开发, 可以拉取在线文档的API接口并批量模块化生成`JavaScript`/`TypeScript`前端代码接口函数
+> <span style="color：#4569d4">gen-api-js</span>是一个代码生成工具，基于 [puppeteerjs](http://puppeteerjs.com/#?product=Puppeteer&version=puppeteer-v21.4.1) 开发, 它可以根据后端提供的线上接口文档然后批量模块化生成`JavaScript`/`TypeScript`前端代码接口函数
 
 ## 环境要求
 
@@ -19,18 +23,18 @@
 
 ## 安装
 
-选择你常用的包管理器将 <span style="color：#4569d4">gen-api</span> 加入项目依赖即可：
+选择你常用的包管理器将 <span style="color：#4569d4">```gen-api-js```</span> 加入项目依赖即可：
 
 ```javascript
 
 # npm
-npm i gen-api-js
+npm i gen-api-js -g
 
 # yarn
-yarn add gen-api-js
+yarn add gen-api-js -g
 
 # pnpm
-pnpm add gen-api-js
+pnpm add gen-api-js -g
 
 ```
 
@@ -126,13 +130,13 @@ pnpm add gen-api-js
 
 - 类型：boolean
 
-- 默认值：false
+- 默认值：false 
 
 - 必填：否
 
 - 说明：
 
-  生成语言类型，默认生成JavaScript
+  生成语言类型，默认会根据文件类型去生成 
 
 #### cacheFileName
 

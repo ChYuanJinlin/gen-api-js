@@ -29,6 +29,8 @@ global.Generator = class Generator {
     this.apiNames = [];
     // 当前第几项
     this.curNum = (num = 1) => num;
+    config.importRequestName =
+      config.importRequestName || "import ajax from '@/utils/request'";
     // 导入封装的接口名称
     let name = /import (.*?) from/.exec(config.importRequestName)?.[1];
     name?.includes("{")
@@ -137,7 +139,6 @@ global.Generator = class Generator {
         } else {
           this.spinner.warn(`程序已执行完毕,没有可需要生成的接口`);
         }
-
         process.exit();
       }
     }, Promise.resolve());
@@ -152,22 +153,36 @@ global.Generator = class Generator {
   }
 
   async setRequestTemplate(opt) {
-    const {
-      paramsName = "",
-      annotation = "",
-      requestFunc = "",
-    } = this.config.requestOptions;
+    const { paramsName, annotation, requestFunc } = Object.assign(
+      {
+        paramsName: "",
+        annotation: "",
+        requestFunc: "",
+      },
+      this.config.requestOptions
+    );
+    opt.restFul = "";
+
+    let match = opt.path.match(/\{([^}]+)\}/);
+
+    if (match && match[1]) {
+      opt.path = opt.path.replace(
+        /\$\{([^}]+)\}/,
+        (match, p1) => `\$\{${p1.toLowerCase()}\}`
+      );
+      opt.restFul = match[1].toLowerCase();
+    }
+
     const projectName = opt.projectName;
     const determineParamsName = (opt) => {
       return typeof paramsName === "function"
         ? paramsName.call(this, opt)
-        : opt.restFul || paramsName || opt.method === "get"
-          ? "params"
-          : "data";
+        : opt.restFul ||
+            paramsName ||
+            (opt.method === "get" ? "params" : "data");
     };
 
-    const newParamsName = determineParamsName(opt);
-    opt.newParamsName = newParamsName;
+    opt.newParamsName = determineParamsName(opt);
 
     let reqTypeCode = "";
     let resTypeCode = "";
@@ -206,7 +221,8 @@ global.Generator = class Generator {
           : ""
       );
     }
-
+    !reqTypeCode ? (reqTypeName = "any") : "";
+    !resTypeCode ? (resTypeName = "any") : "";
     const annotationComment =
       typeof annotation === "function"
         ? `/*\n*@序号:${apiNum}\n${annotation.call(this, opt)}\n*/`
@@ -222,8 +238,8 @@ global.Generator = class Generator {
             .call(this, opt, reqTypeName, resTypeName)
             .replace(/url:\s*([^,\s]+),/g, "url:`$1`,")
         : `
-      export function ${opt.apiName}(${this.config.typescript ? `${newParamsName}?:${reqTypeName}` : `${newParamsName}`}) ${this.config.typescript ? `: Promise<any>` : ""}  { 
-        return ${this.requestName}({ url: \`${opt.path}\`, method: '${opt.method}', ${!opt.restFul ? ` ${newParamsName}` : ``}})
+      export function ${opt.apiName}(${this.config.typescript ? `${opt.newParamsName}?:${reqTypeName}` : `${opt.newParamsName}`}) { 
+        return ${this.requestName}${this.config.typescript ? `<${reqTypeName},${resTypeName}>` : ""}({ url: \`${opt.path}\`, method: '${opt.method}', ${!opt.restFul ? opt.newParamsName : ""}})
       }
       `;
 
@@ -233,6 +249,9 @@ global.Generator = class Generator {
     ${annotationComment}
     ${requestFuncCode}
     `;
+  }
+  getReadFiles() {
+    this.readFiles = fs.readFileSync(this.selectName, "utf-8");
   }
   async gen(message) {
     if (message) {
@@ -245,22 +264,25 @@ global.Generator = class Generator {
         },
       ]);
       this.selectName = type;
-      this.readFiles = fs.readFileSync(this.selectName, "utf-8");
+      if (path.extname(this.selectName) === ".ts") {
+        this.config.typescript = true;
+      }
+      this.getReadFiles();
       // 拿到最后序号
       if (getNum(this.readFiles)) {
         apiNum = getNum(this.readFiles);
       }
+
       this.paths = this.readFiles
         .split("\n")
         .map((item) => {
-          if (/^url/.test(item.trim())) {
-            return item
-              .split(":")[1]
-              .replace(/[,'`:"${|}]/g, "")
-              .trim();
+          if (/\/[\w\/]+/g.test(item.trim())) {
+            item = item.replace(/[,'`:"${|}]/g, "");
+            return item.match(/\/[\w\/]+/g)[0];
           }
         })
         .filter((item) => item);
+      this.paths = [...new Set(this.paths)];
     }
     return {
       add: async (data, catIds, fn, isRepeat = true) => {
@@ -268,7 +290,6 @@ global.Generator = class Generator {
           const item = data.list[lIndex];
           if (isRepeat) {
             // 如果没有重复的项则生成
-
             if (
               !this.paths.includes(item.path.replace(/\{|\}/g, "")) &&
               getGenType(catIds, lIndex + 1, item)
@@ -325,7 +346,7 @@ global.Generator = class Generator {
               this.apiNames.push(apiName);
               this.totalApiNames.push(apiName);
               this.names.push(item.title);
-            
+
               this.apis.push(
                 await this.setRequestTemplate({
                   ...item,
@@ -362,6 +383,7 @@ global.Generator = class Generator {
           this.spinner.start(
             !this.paths.length ? `正在写入文件中...\n` : `正在更新文件中...\n`
           );
+
           fs.appendFileSync(
             this.selectName,
             await prettier.format(this.apis.join("\n"), {
@@ -387,34 +409,17 @@ global.Generator = class Generator {
 
       // 写入头部
       writeHeader: () => {
-        if (
-          this.config.projects.every(
-            (item) => typeof item === "string" || typeof item === "number"
-          )
-        ) {
-          if (this.index == this.config.projects.length - 1) {
-            // 加入最前面的头部
-            this.apis.unshift(
-              this.setHeader(
-                this.projectName,
-                this.selectName.replace("\\g", "/").match(/src(.*)$/)[1],
-                this.totalApiNames.join(","),
-                this.apiUrl
-              )
-            );
-          }
-        } else {
-          if (!this.readFiles) {
-            // 加入最前面的头部
-            this.apis.unshift(
-              this.setHeader(
-                this.projectName,
-                this.selectName.replace("\\g", "/").match(/src(.*)$/)[1],
-                this.totalApiNames.join(","),
-                this.apiUrl
-              )
-            );
-          }
+        this.getReadFiles();
+        if (!this.readFiles) {
+          // 加入最前面的头部
+          this.apis.unshift(
+            this.setHeader(
+              this.projectName,
+              this.selectName.replace("\\g", "/").match(/src(.*)$/)[1],
+              this.totalApiNames.join(","),
+              this.apiUrl
+            )
+          );
         }
 
         // 在文件内容中查找匹配项并进行替换

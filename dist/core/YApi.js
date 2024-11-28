@@ -243,7 +243,7 @@ module.exports = /*#__PURE__*/function (_global$Generator) {
                                   });
                                   noIds.some(function (item) {
                                     _this2.spinner.warn("".concat(item, "\u5206\u7C7Bid\u4E0D\u5B58\u5728,\u8BF7\u68C0\u67E5\u8BE5\u5206\u7C7Bid\u662F\u5426\u5728\u8BE5\u9879\u76EE"));
-                                    process.exit();
+                                    resolve();
                                   });
                                   i = 0;
                                 case 42:

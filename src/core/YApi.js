@@ -147,7 +147,7 @@ module.exports = class YApi extends global.Generator {
                 this.spinner.warn(
                   `${item}分类id不存在,请检查该分类id是否在该项目`
                 );
-                process.exit();
+                resolve();
               });
 
               for (let i = 0; i < this.catIds.length; i++) {

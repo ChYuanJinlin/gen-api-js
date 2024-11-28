@@ -49,6 +49,7 @@ global.Generator = /*#__PURE__*/function () {
       var num = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       return num;
     };
+    config.importRequestName = config.importRequestName || "import ajax from '@/utils/request'";
     // 导入封装的接口名称
     var name = (_exec = /import (.*?) from/.exec(config.importRequestName)) === null || _exec === void 0 ? void 0 : _exec[1];
     (_name = name) !== null && _name !== void 0 && _name.includes("{") ? name = name.replace(/{|}/g, "").split(",")[0] : name;
@@ -179,46 +180,59 @@ global.Generator = /*#__PURE__*/function () {
     value: function () {
       var _setRequestTemplate = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee3(opt) {
         var _this3 = this;
-        var _this$config$requestO, _this$config$requestO2, paramsName, _this$config$requestO3, annotation, _this$config$requestO4, requestFunc, projectName, determineParamsName, newParamsName, reqTypeCode, resTypeCode, reqTypeName, resTypeName, _JSON$parse, _opt$detail, req_body_form, req_params, req_query, req_body_other, method, req_body_type, req_body_is_json_schema, annotationComment, requestFuncCode;
+        var _Object$assign, paramsName, annotation, requestFunc, match, projectName, determineParamsName, reqTypeCode, resTypeCode, reqTypeName, resTypeName, _JSON$parse, _opt$detail, req_body_form, req_params, req_query, req_body_other, method, req_body_type, req_body_is_json_schema, annotationComment, requestFuncCode;
         return _regenerator.default.wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
-              _this$config$requestO = this.config.requestOptions, _this$config$requestO2 = _this$config$requestO.paramsName, paramsName = _this$config$requestO2 === void 0 ? "" : _this$config$requestO2, _this$config$requestO3 = _this$config$requestO.annotation, annotation = _this$config$requestO3 === void 0 ? "" : _this$config$requestO3, _this$config$requestO4 = _this$config$requestO.requestFunc, requestFunc = _this$config$requestO4 === void 0 ? "" : _this$config$requestO4;
+              _Object$assign = Object.assign({
+                paramsName: "",
+                annotation: "",
+                requestFunc: ""
+              }, this.config.requestOptions), paramsName = _Object$assign.paramsName, annotation = _Object$assign.annotation, requestFunc = _Object$assign.requestFunc;
+              opt.restFul = "";
+              match = opt.path.match(/\{([^}]+)\}/);
+              if (match && match[1]) {
+                opt.path = opt.path.replace(/\$\{([^}]+)\}/, function (match, p1) {
+                  return "${".concat(p1.toLowerCase(), "}");
+                });
+                opt.restFul = match[1].toLowerCase();
+              }
               projectName = opt.projectName;
               determineParamsName = function determineParamsName(opt) {
-                return typeof paramsName === "function" ? paramsName.call(_this3, opt) : opt.restFul || paramsName || opt.method === "get" ? "params" : "data";
+                return typeof paramsName === "function" ? paramsName.call(_this3, opt) : opt.restFul || paramsName || (opt.method === "get" ? "params" : "data");
               };
-              newParamsName = determineParamsName(opt);
-              opt.newParamsName = newParamsName;
+              opt.newParamsName = determineParamsName(opt);
               reqTypeCode = "";
               resTypeCode = "";
               reqTypeName = "";
               resTypeName = "";
               if (!opt.detail) {
-                _context3.next = 19;
+                _context3.next = 21;
                 break;
               }
               _opt$detail = opt.detail, req_body_form = _opt$detail.req_body_form, req_params = _opt$detail.req_params, req_query = _opt$detail.req_query, req_body_other = _opt$detail.req_body_other, method = _opt$detail.method, req_body_type = _opt$detail.req_body_type, req_body_is_json_schema = _opt$detail.req_body_is_json_schema;
               reqTypeName = "I".concat(opt.formatPaths.at(-2)).concat(opt.formatPaths.at(-1), "Params");
               resTypeName = "I".concat(opt.formatPaths.at(-2)).concat(opt.formatPaths.at(-1), "Data");
-              _context3.next = 15;
+              _context3.next = 17;
               return genTemplateTS(reqTypeName, {
                 reqBody: req_body_form.length ? req_body_form : req_params.length ? req_params : req_query.length ? req_query : req_body_other,
                 method: method,
                 reqType: req_body_type,
                 jsonSchema: req_body_is_json_schema
               });
-            case 15:
+            case 17:
               reqTypeCode = _context3.sent;
-              _context3.next = 18;
+              _context3.next = 20;
               return jsonSchemaToTs(resTypeName, opt.detail.res_body ? JSON.stringify((_JSON$parse = JSON.parse(opt.detail.res_body)) === null || _JSON$parse === void 0 || (_JSON$parse = _JSON$parse.properties) === null || _JSON$parse === void 0 ? void 0 : _JSON$parse.data) : "");
-            case 18:
+            case 20:
               resTypeCode = _context3.sent;
-            case 19:
+            case 21:
+              !reqTypeCode ? reqTypeName = "any" : "";
+              !resTypeCode ? resTypeName = "any" : "";
               annotationComment = typeof annotation === "function" ? "/*\n*@\u5E8F\u53F7:".concat(apiNum, "\n").concat(annotation.call(this, opt), "\n*/") : "/* \n      *@\u5E8F\u53F7:".concat(apiNum, "\n      *@\u9879\u76EE\u540D\u79F0:").concat(projectName, "\n      *@\u83DC\u5355\u540D\u79F0:").concat(opt.title, "(").concat(opt.url, ") \n      */");
-              requestFuncCode = typeof requestFunc === "function" ? requestFunc.call(this, opt, reqTypeName, resTypeName).replace(/url:\s*([^,\s]+),/g, "url:`$1`,") : "\n      export function ".concat(opt.apiName, "(").concat(this.config.typescript ? "".concat(newParamsName, "?:").concat(reqTypeName) : "".concat(newParamsName), ") ").concat(this.config.typescript ? ": Promise<any>" : "", "  { \n        return ").concat(this.requestName, "({ url: `").concat(opt.path, "`, method: '").concat(opt.method, "', ").concat(!opt.restFul ? " ".concat(newParamsName) : "", "})\n      }\n      ");
+              requestFuncCode = typeof requestFunc === "function" ? requestFunc.call(this, opt, reqTypeName, resTypeName).replace(/url:\s*([^,\s]+),/g, "url:`$1`,") : "\n      export function ".concat(opt.apiName, "(").concat(this.config.typescript ? "".concat(opt.newParamsName, "?:").concat(reqTypeName) : "".concat(opt.newParamsName), ") { \n        return ").concat(this.requestName).concat(this.config.typescript ? "<".concat(reqTypeName, ",").concat(resTypeName, ">") : "", "({ url: `").concat(opt.path, "`, method: '").concat(opt.method, "', ").concat(!opt.restFul ? opt.newParamsName : "", "})\n      }\n      ");
               return _context3.abrupt("return", "\n    ".concat(reqTypeCode, "\n    ").concat(resTypeCode, "\n    ").concat(annotationComment, "\n    ").concat(requestFuncCode, "\n    "));
-            case 22:
+            case 26:
             case "end":
               return _context3.stop();
           }
@@ -230,6 +244,11 @@ global.Generator = /*#__PURE__*/function () {
       return setRequestTemplate;
     }()
   }, {
+    key: "getReadFiles",
+    value: function getReadFiles() {
+      this.readFiles = fs.readFileSync(this.selectName, "utf-8");
+    }
+  }, {
     key: "gen",
     value: function () {
       var _gen = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee5(message) {
@@ -239,7 +258,7 @@ global.Generator = /*#__PURE__*/function () {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
               if (!message) {
-                _context6.next = 9;
+                _context6.next = 11;
                 break;
               }
               _context6.next = 3;
@@ -253,19 +272,24 @@ global.Generator = /*#__PURE__*/function () {
               _yield$inquirer$promp = _context6.sent;
               type = _yield$inquirer$promp.type;
               this.selectName = type;
-              this.readFiles = fs.readFileSync(this.selectName, "utf-8");
+              if (path.extname(this.selectName) === ".ts") {
+                this.config.typescript = true;
+              }
+              this.getReadFiles();
               // 拿到最后序号
               if (getNum(this.readFiles)) {
                 apiNum = getNum(this.readFiles);
               }
               this.paths = this.readFiles.split("\n").map(function (item) {
-                if (/^url/.test(item.trim())) {
-                  return item.split(":")[1].replace(/[,'`:"${|}]/g, "").trim();
+                if (/\/[\w\/]+/g.test(item.trim())) {
+                  item = item.replace(/[,'`:"${|}]/g, "");
+                  return item.match(/\/[\w\/]+/g)[0];
                 }
               }).filter(function (item) {
                 return item;
               });
-            case 9:
+              this.paths = (0, _toConsumableArray2.default)(new Set(this.paths));
+            case 11:
               return _context6.abrupt("return", {
                 add: function () {
                   var _add = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee4(data, catIds, fn) {
@@ -371,7 +395,7 @@ global.Generator = /*#__PURE__*/function () {
                   return add;
                 }()
               });
-            case 10:
+            case 12:
             case "end":
               return _context6.stop();
           }
@@ -448,18 +472,10 @@ global.Generator = /*#__PURE__*/function () {
         }(),
         // 写入头部
         writeHeader: function writeHeader() {
-          if (_this5.config.projects.every(function (item) {
-            return typeof item === "string" || typeof item === "number";
-          })) {
-            if (_this5.index == _this5.config.projects.length - 1) {
-              // 加入最前面的头部
-              _this5.apis.unshift(_this5.setHeader(_this5.projectName, _this5.selectName.replace("\\g", "/").match(/src(.*)$/)[1], _this5.totalApiNames.join(","), _this5.apiUrl));
-            }
-          } else {
-            if (!_this5.readFiles) {
-              // 加入最前面的头部
-              _this5.apis.unshift(_this5.setHeader(_this5.projectName, _this5.selectName.replace("\\g", "/").match(/src(.*)$/)[1], _this5.totalApiNames.join(","), _this5.apiUrl));
-            }
+          _this5.getReadFiles();
+          if (!_this5.readFiles) {
+            // 加入最前面的头部
+            _this5.apis.unshift(_this5.setHeader(_this5.projectName, _this5.selectName.replace("\\g", "/").match(/src(.*)$/)[1], _this5.totalApiNames.join(","), _this5.apiUrl));
           }
 
           // 在文件内容中查找匹配项并进行替换

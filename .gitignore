@@ -5,5 +5,4 @@ node_modules
 .lh
 .history
 package-lock.json
-api.data
-api.data.json
+genApi.data.json
