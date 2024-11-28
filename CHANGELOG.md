@@ -1,5 +1,14 @@
 
 
+## [0.0.3](https://github.com/ChYuanJinlin/gen-api-js/compare/v0.0.2...v0.0.3) (2024-11-27)
+
+
+### ✨新功能
+
+* 添加新的功能配置 ([8606433](https://github.com/ChYuanJinlin/gen-api-js/commit/860643338b67e0760f47f38b28f4a6b1f0353309))
+* 新增build.js ([9a23323](https://github.com/ChYuanJinlin/gen-api-js/commit/9a23323ae03ce1813dadb4d1a548314b4fcf799c))
+* 增加push 命令 ([bc9910f](https://github.com/ChYuanJinlin/gen-api-js/commit/bc9910fc4e4c03906bc18d41751ca2aa867551a1))
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
