@@ -180,7 +180,7 @@ global.Generator = /*#__PURE__*/function () {
     value: function () {
       var _setRequestTemplate = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee3(opt) {
         var _this3 = this;
-        var _Object$assign, paramsName, annotation, requestFunc, match, projectName, determineParamsName, reqTypeCode, resTypeCode, reqTypeName, resTypeName, _JSON$parse, _opt$detail, req_body_form, req_params, req_query, req_body_other, method, req_body_type, req_body_is_json_schema, annotationComment, requestFuncCode;
+        var _Object$assign, paramsName, annotation, requestFunc, match, projectName, determineParamsName, reqTypeCode, resTypeCode, reqTypeName, resTypeName, _JSON$parse, _opt$detail, req_body_form, req_params, req_query, req_body_other, method, req_body_type, req_body_is_json_schema, typeName, annotationComment, requestFuncCode;
         return _regenerator.default.wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
@@ -207,32 +207,33 @@ global.Generator = /*#__PURE__*/function () {
               reqTypeName = "";
               resTypeName = "";
               if (!opt.detail) {
-                _context3.next = 21;
+                _context3.next = 22;
                 break;
               }
               _opt$detail = opt.detail, req_body_form = _opt$detail.req_body_form, req_params = _opt$detail.req_params, req_query = _opt$detail.req_query, req_body_other = _opt$detail.req_body_other, method = _opt$detail.method, req_body_type = _opt$detail.req_body_type, req_body_is_json_schema = _opt$detail.req_body_is_json_schema;
-              reqTypeName = "I".concat(opt.formatPaths.at(-2)).concat(opt.formatPaths.at(-1), "Params");
-              resTypeName = "I".concat(opt.formatPaths.at(-2)).concat(opt.formatPaths.at(-1), "Data");
-              _context3.next = 17;
+              typeName = opt.formatPaths.slice(2).join("");
+              reqTypeName = "I".concat(typeName, "Params");
+              resTypeName = "I".concat(typeName, "Data");
+              _context3.next = 18;
               return genTemplateTS(reqTypeName, {
                 reqBody: req_body_form.length ? req_body_form : req_params.length ? req_params : req_query.length ? req_query : req_body_other,
                 method: method,
                 reqType: req_body_type,
                 jsonSchema: req_body_is_json_schema
               });
-            case 17:
+            case 18:
               reqTypeCode = _context3.sent;
-              _context3.next = 20;
+              _context3.next = 21;
               return jsonSchemaToTs(resTypeName, opt.detail.res_body ? JSON.stringify((_JSON$parse = JSON.parse(opt.detail.res_body)) === null || _JSON$parse === void 0 || (_JSON$parse = _JSON$parse.properties) === null || _JSON$parse === void 0 ? void 0 : _JSON$parse.data) : "");
-            case 20:
-              resTypeCode = _context3.sent;
             case 21:
+              resTypeCode = _context3.sent;
+            case 22:
               !reqTypeCode ? reqTypeName = "any" : "";
               !resTypeCode ? resTypeName = "any" : "";
               annotationComment = typeof annotation === "function" ? "/*\n*@\u5E8F\u53F7:".concat(apiNum, "\n").concat(annotation.call(this, opt), "\n*/") : "/* \n      *@\u5E8F\u53F7:".concat(apiNum, "\n      *@\u9879\u76EE\u540D\u79F0:").concat(projectName, "\n      *@\u83DC\u5355\u540D\u79F0:").concat(opt.title, "(").concat(opt.url, ") \n      */");
               requestFuncCode = typeof requestFunc === "function" ? requestFunc.call(this, opt, reqTypeName, resTypeName).replace(/url:\s*([^,\s]+),/g, "url:`$1`,") : "\n      export function ".concat(opt.apiName, "(").concat(this.config.typescript ? "".concat(opt.newParamsName, "?:").concat(reqTypeName) : "".concat(opt.newParamsName), ") { \n        return ").concat(this.requestName).concat(this.config.typescript ? "<".concat(reqTypeName, ",").concat(resTypeName, ">") : "", "({ url: `").concat(opt.path, "`, method: '").concat(opt.method, "', ").concat(!opt.restFul ? opt.newParamsName : "", "})\n      }\n      ");
               return _context3.abrupt("return", "\n    ".concat(reqTypeCode, "\n    ").concat(resTypeCode, "\n    ").concat(annotationComment, "\n    ").concat(requestFuncCode, "\n    "));
-            case 26:
+            case 27:
             case "end":
               return _context3.stop();
           }

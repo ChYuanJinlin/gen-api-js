@@ -16,6 +16,7 @@ function _genTemplateTS() {
       reqBody,
       reqType,
       method,
+      _JSON$parse,
       paramName,
       IParamsTemplate,
       template,
@@ -41,40 +42,41 @@ function _genTemplateTS() {
           option = _args.length > 1 ? _args[1] : undefined;
           jsonSchema = _args.length > 2 ? _args[2] : undefined;
           reqBody = option.reqBody, reqType = option.reqType, method = option.method;
+          console.log("🚀 ~ genTemplateTS ~ reqBody:", reqBody);
           if (!jsonSchema) {
-            _context.next = 8;
+            _context.next = 9;
             break;
           }
-          jsonSchemaToTs(typeName, reqBody || "");
+          jsonSchemaToTs(typeName, JSON.stringify((_JSON$parse = JSON.parse(reqBody)) === null || _JSON$parse === void 0 ? void 0 : _JSON$parse.properties) || "");
           return _context.abrupt("return");
-        case 8:
+        case 9:
           if (reqBody) {
-            _context.next = 10;
+            _context.next = 11;
             break;
           }
           return _context.abrupt("return", "");
-        case 10:
+        case 11:
           paramName = typeName;
           IParamsTemplate = "";
           if (!(method === "POST" && reqType === "json")) {
-            _context.next = 18;
+            _context.next = 19;
             break;
           }
-          _context.next = 15;
+          _context.next = 16;
           return translateTempte(reqBody, paramName);
-        case 15:
+        case 16:
           IParamsTemplate = _context.sent;
-          _context.next = 21;
+          _context.next = 22;
           break;
-        case 18:
-          _context.next = 20;
+        case 19:
+          _context.next = 21;
           return Promise.resolve(translateTempteQuery(reqBody, paramName));
-        case 20:
-          IParamsTemplate = _context.sent;
         case 21:
+          IParamsTemplate = _context.sent;
+        case 22:
           template = "".concat(IParamsTemplate);
           return _context.abrupt("return", template);
-        case 23:
+        case 24:
         case "end":
           return _context.stop();
       }

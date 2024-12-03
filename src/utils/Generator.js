@@ -198,8 +198,9 @@ global.Generator = class Generator {
         req_body_type,
         req_body_is_json_schema,
       } = opt.detail;
-      reqTypeName = `I${opt.formatPaths.at(-2)}${opt.formatPaths.at(-1)}Params`;
-      resTypeName = `I${opt.formatPaths.at(-2)}${opt.formatPaths.at(-1)}Data`;
+      let typeName = opt.formatPaths.slice(2).join("");
+      reqTypeName = `I${typeName}Params`;
+      resTypeName = `I${typeName}Data`;
 
       reqTypeCode = await genTemplateTS(reqTypeName, {
         reqBody: req_body_form.length
