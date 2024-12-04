@@ -12,11 +12,10 @@ function _genTemplateTS() {
   _genTemplateTS = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee() {
     var typeName,
       option,
-      jsonSchema,
       reqBody,
       reqType,
       method,
-      _JSON$parse,
+      jsonSchema,
       paramName,
       IParamsTemplate,
       template,
@@ -40,43 +39,40 @@ function _genTemplateTS() {
           };
           typeName = _args.length > 0 && _args[0] !== undefined ? _args[0] : "ITest";
           option = _args.length > 1 ? _args[1] : undefined;
-          jsonSchema = _args.length > 2 ? _args[2] : undefined;
-          reqBody = option.reqBody, reqType = option.reqType, method = option.method;
-          console.log("🚀 ~ genTemplateTS ~ reqBody:", reqBody);
+          reqBody = option.reqBody, reqType = option.reqType, method = option.method, jsonSchema = option.jsonSchema;
           if (!jsonSchema) {
-            _context.next = 9;
+            _context.next = 6;
             break;
           }
-          jsonSchemaToTs(typeName, JSON.stringify((_JSON$parse = JSON.parse(reqBody)) === null || _JSON$parse === void 0 ? void 0 : _JSON$parse.properties) || "");
-          return _context.abrupt("return");
-        case 9:
+          return _context.abrupt("return", jsonSchemaToTs(typeName, reqBody));
+        case 6:
           if (reqBody) {
-            _context.next = 11;
+            _context.next = 8;
             break;
           }
           return _context.abrupt("return", "");
-        case 11:
+        case 8:
           paramName = typeName;
           IParamsTemplate = "";
           if (!(method === "POST" && reqType === "json")) {
-            _context.next = 19;
+            _context.next = 16;
             break;
           }
-          _context.next = 16;
+          _context.next = 13;
           return translateTempte(reqBody, paramName);
-        case 16:
+        case 13:
           IParamsTemplate = _context.sent;
-          _context.next = 22;
+          _context.next = 19;
           break;
-        case 19:
-          _context.next = 21;
+        case 16:
+          _context.next = 18;
           return Promise.resolve(translateTempteQuery(reqBody, paramName));
-        case 21:
+        case 18:
           IParamsTemplate = _context.sent;
-        case 22:
+        case 19:
           template = "".concat(IParamsTemplate);
           return _context.abrupt("return", template);
-        case 24:
+        case 21:
         case "end":
           return _context.stop();
       }

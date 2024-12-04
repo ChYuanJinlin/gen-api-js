@@ -1,16 +1,11 @@
 const { jsonSchemaToTs } = require("./toTs");
-async function genTemplateTS(typeName = "ITest", option, jsonSchema) {
-  const { reqBody, reqType, method } = option;
-  console.log("🚀 ~ genTemplateTS ~ reqBody:", reqBody);
+async function genTemplateTS(typeName = "ITest", option) {
+  const { reqBody, reqType, method, jsonSchema } = option;
   if (jsonSchema) {
-    jsonSchemaToTs(
-      typeName,
-      JSON.stringify(JSON.parse(reqBody)?.properties) || ""
-    );
-    return;
+    return jsonSchemaToTs(typeName, reqBody);
   }
   if (!reqBody) {
-    return "";
+    return "any";
   }
   const paramName = typeName;
   let IParamsTemplate = "";

@@ -188,6 +188,7 @@ global.Generator = class Generator {
     let resTypeCode = "";
     let reqTypeName = "";
     let resTypeName = "";
+
     if (opt.detail) {
       const {
         req_body_form,

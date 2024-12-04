@@ -63,24 +63,26 @@ function _quicktypeJSONSchema() {
     return _regenerator.default.wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
+          console.log("🚀 ~ quicktypeJSONSchema ~ jsonSchemaString:", jsonSchemaString);
+          console.log("🚀 ~ quicktypeJSONSchema ~ typeName:", typeName);
           if (jsonSchemaString) {
-            _context.next = 2;
+            _context.next = 4;
             break;
           }
           return _context.abrupt("return", '');
-        case 2:
+        case 4:
           schemaInput = new JSONSchemaInput(new FetchingJSONSchemaStore()); // We could add multiple schemas for multiple types,
           // but here we're just making one type from JSON schema.
-          _context.next = 5;
+          _context.next = 7;
           return schemaInput.addSource({
             name: typeName,
             schema: jsonSchemaString
           });
-        case 5:
+        case 7:
           inputData = new InputData();
           inputData.addInput(schemaInput);
           debugger;
-          _context.next = 10;
+          _context.next = 12;
           return quicktype({
             inputData: inputData,
             "export": true,
@@ -89,11 +91,11 @@ function _quicktypeJSONSchema() {
               "just-types": true
             }
           });
-        case 10:
+        case 12:
           _yield$quicktype = _context.sent;
           lines = _yield$quicktype.lines;
           return _context.abrupt("return", lines.join("\n"));
-        case 13:
+        case 15:
         case "end":
           return _context.stop();
       }
