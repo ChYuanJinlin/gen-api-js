@@ -1,4 +1,4 @@
-/* 参考文档:https://www.npmjs.com/package/@yuanjinlin/gen-api */
+/* 参考文档:https://www.npmjs.com/package/gen-api-js */
 module.exports = {
   // 在线文档的账户信息
   users: {

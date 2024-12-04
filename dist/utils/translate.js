@@ -50,7 +50,7 @@ function _genTemplateTS() {
             _context.next = 8;
             break;
           }
-          return _context.abrupt("return", "");
+          return _context.abrupt("return", "any");
         case 8:
           paramName = typeName;
           IParamsTemplate = "";
