@@ -3,9 +3,7 @@ const { getIds, getPageData } = require("../utils/index");
 module.exports = class YApi extends global.Generator {
   constructor(config) {
     super(config);
-    // 默认域名
-    this.config.docUrl =
-      this.config.docUrl.replace(/\/$/, "") || "http://api.doc.jiyou-tech.com";
+    this.setDocUrl("http://api.doc.jiyou-tech.com");
   }
   getUrl(catId) {
     return {
@@ -28,7 +26,7 @@ module.exports = class YApi extends global.Generator {
       await this.page.waitForSelector("#email", {
         timeout: 0,
       });
-     
+
       // 输入账号密码
       await this.page.waitForSelector("#email");
       await this.page.type("#email", this.userName);
@@ -87,7 +85,7 @@ module.exports = class YApi extends global.Generator {
         await this.page.goto(this.apiUrl);
         // 监听当前接口返回数据
         this.getData(
-          `${this.config.docUrl}/api/interface/list_menu?project_id=${opt.projectId}`
+          `/api/interface/list_menu?project_id=${opt.projectId}`
         ).then(async (menuList) => {
           this.spinner.stop();
           await this.page.waitForSelector(

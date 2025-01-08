@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const GenApi = require("../dist/index.js");
 require("core-js/stable");
-require("regenerator-runtime/runtime");
+// require("regenerator-runtime/runtime");
 let configPath = "";
 let docsWebs = [];
 docsWebs = fs

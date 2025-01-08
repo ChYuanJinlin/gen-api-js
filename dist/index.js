@@ -7,6 +7,7 @@ var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/de
 var _GenApi;
 require("./utils/Generator");
 var path = require("path");
+var ApiFox = require(path.join(__dirname, "core/ApiFox"));
 var YApi = require(path.join(__dirname, "core/YApi"));
 module.exports = (_GenApi = /*#__PURE__*/function () {
   function GenApi() {
@@ -17,6 +18,8 @@ module.exports = (_GenApi = /*#__PURE__*/function () {
     value: function createGenApi(config) {
       this.docName = config.docName;
       switch (this.docName) {
+        case "apifox":
+          return new ApiFox(config);
         case "yapi":
           return new YApi(config);
         default:

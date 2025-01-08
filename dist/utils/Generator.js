@@ -2,8 +2,8 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -93,7 +93,8 @@ global.Generator = /*#__PURE__*/function () {
               method: "launch",
               run: function run(puppeteer) {
                 return _objectSpread({
-                  headless: config.debug ? !config.debug : true
+                  headless: config.debug ? !config.debug : true,
+                  devtools: config.debug ? !config.debug : true
                 }, defaultOptions);
               }
             }, config.puppeteerOpt);
@@ -117,7 +118,56 @@ global.Generator = /*#__PURE__*/function () {
     });
     this.spinner.start();
   }
+  // 设置url
   return (0, _createClass2.default)(Generator, [{
+    key: "setDocUrl",
+    value: function setDocUrl(url) {
+      // 默认域名
+      this.config.docUrl = this.config.docUrl.replace(/\/$/, "") || url;
+    }
+  }, {
+    key: "setIndexUrl",
+    value: function setIndexUrl(url) {
+      // 默认域名
+      this.indexUrl = this.config.docUrl + url;
+    }
+  }, {
+    key: "setResponse",
+    value: function setResponse(msgKey, codeKey) {
+      this.msgKey = msgKey;
+      this.codeKey = codeKey;
+    }
+  }, {
+    key: "isCatIds",
+    value: function isCatIds(catIds, resolve) {
+      if (catIds && Array.isArray(catIds)) {
+        var _this$cacheData$this$;
+        var oldCatIds = ((_this$cacheData$this$ = this.cacheData[this.cacheKey.name]) === null || _this$cacheData$this$ === void 0 || (_this$cacheData$this$ = _this$cacheData$this$[index]) === null || _this$cacheData$this$ === void 0 ? void 0 : _this$cacheData$this$.ids) || [];
+        this.catIds = catIds.filter(function (item) {
+          return !oldCatIds.some(function (s) {
+            return getIds(s) === getIds(item);
+          });
+        });
+        if (!this.catIds.length) {
+          resolve();
+          return false;
+        }
+      } else {
+        var _this$cacheData$this$2;
+        if ((_this$cacheData$this$2 = this.cacheData[this.cacheKey.name]) !== null && _this$cacheData$this$2 !== void 0 && _this$cacheData$this$2[this.index] && this.cacheData[this.cacheKey.name][this.index].pid) {
+          resolve();
+          return false;
+        }
+      }
+    }
+  }, {
+    key: "setFiles",
+    value: function setFiles() {
+      if (this.selectName) {
+        this.files = (0, _toConsumableArray2.default)(new Set([this.selectName].concat((0, _toConsumableArray2.default)(this.files))));
+      }
+    }
+  }, {
     key: "berforeInit",
     value: function berforeInit() {
       var _this2 = this;
@@ -502,7 +552,7 @@ global.Generator = /*#__PURE__*/function () {
             return _regenerator.default.wrap(function _callee8$(_context9) {
               while (1) switch (_context9.prev = _context9.next) {
                 case 0:
-                  if (!(response.url() === url && response.status() === 200)) {
+                  if (!(new RegExp(url, "g").test(response.url()) && response.status() === 200)) {
                     _context9.next = 6;
                     break;
                   }
@@ -510,8 +560,8 @@ global.Generator = /*#__PURE__*/function () {
                   return response.json();
                 case 3:
                   res = _context9.sent;
-                  if (res.errcode != 0) {
-                    spinner.fail(res.errmsg);
+                  if (!res.success || res[_this6.codeKey] && res[_this6.codeKey || "errcode"] != 0) {
+                    spinner.fail(res[_this6.msgKey || "errmsg"]);
                     process.exit();
                   }
                   resolve(res.data);

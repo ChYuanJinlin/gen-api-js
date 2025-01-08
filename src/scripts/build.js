@@ -2,6 +2,7 @@ const { getFilenames } = require("../utils/index");
 const path = require("path");
 const prettier = require("prettier");
 const fs = require("fs");
+const { console } = require("inspector");
 const filesNames = [];
 getFilenames(
   path.join(__dirname, "../core"),
@@ -20,6 +21,7 @@ getFilenames(
 );
 
 function genIndex() {
+  console.log('filesNames',filesNames)
   const templateCode = `
     require("./utils/Generator");
     const path = require("path");

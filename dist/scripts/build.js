@@ -8,6 +8,8 @@ var _require = require("../utils/index"),
 var path = require("path");
 var prettier = require("prettier");
 var fs = require("fs");
+var _require2 = require("inspector"),
+  console = _require2.console;
 var filesNames = [];
 getFilenames(path.join(__dirname, "../core"), /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee(filesName, files, index) {
@@ -39,6 +41,7 @@ getFilenames(path.join(__dirname, "../core"), /*#__PURE__*/function () {
   };
 }());
 function genIndex() {
+  console.log('filesNames', filesNames);
   var templateCode = "\n    require(\"./utils/Generator\");\n    const path = require(\"path\");\n    ".concat(filesNames.map(function (name) {
     return "const ".concat(name, " = require(path.join(__dirname, \"core/").concat(name, "\"));");
   }).join("\n"), "\n    module.exports = class GenApi {\n    static docName;\n    static createGenApi(config) {\n        this.docName = config.docName;\n        switch (this.docName) {\n        ").concat(filesNames.map(function (name) {

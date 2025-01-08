@@ -78,8 +78,8 @@ global.Generator = class Generator {
           run(puppeteer) {
             return {
               headless: config.debug ? !config.debug : true,
+              devtools: config.debug ? !config.debug : true,
               ...defaultOptions,
-              // devtools: true,
               // slowMo: 50,
             };
           },
@@ -102,6 +102,45 @@ global.Generator = class Generator {
     });
 
     this.spinner.start();
+  }
+  // 设置url
+  setDocUrl(url) {
+    // 默认域名
+    this.config.docUrl = this.config.docUrl.replace(/\/$/, "") || url;
+  }
+  setIndexUrl(url) {
+    // 默认域名
+    this.indexUrl = this.config.docUrl + url;
+  }
+  setResponse(msgKey, codeKey) {
+    this.msgKey = msgKey;
+    this.codeKey = codeKey;
+  }
+  isCatIds(catIds, resolve) {
+    if (catIds && Array.isArray(catIds)) {
+      const oldCatIds = this.cacheData[this.cacheKey.name]?.[index]?.ids || [];
+
+      this.catIds = catIds.filter(
+        (item) => !oldCatIds.some((s) => getIds(s) === getIds(item))
+      );
+      if (!this.catIds.length) {
+        resolve();
+        return false;
+      }
+    } else {
+      if (
+        this.cacheData[this.cacheKey.name]?.[this.index] &&
+        this.cacheData[this.cacheKey.name][this.index].pid
+      ) {
+        resolve();
+        return false;
+      }
+    }
+  }
+  setFiles() {
+    if (this.selectName) {
+      this.files = [...new Set([this.selectName, ...this.files])];
+    }
   }
   berforeInit() {
     this.config.projects.reduce(async (promise, item, index) => {
@@ -372,6 +411,44 @@ global.Generator = class Generator {
         }
         return Promise.resolve();
       },
+      // 生成项目所有的api
+      async genAllApi(menuList) {
+        this.selectName = "";
+        for (let mIndex = 0; mIndex < menuList.length; mIndex++) {
+          if (!this.selectName) {
+            await this.gen("请选择需要生成所有接口的文件");
+          }
+          (await this.gen()).add(menuList[mIndex]);
+        }
+      },
+      // 生产项目下所有的api
+      async genProjectApi(menuList, readList) {
+        const { add } = await this.gen(
+          `请选择需要生成${this.projectName}项目接口文件((接口共${menuList.list.length}个))`
+        );
+        await add(list, undefined, readList);
+      },
+      // 生成项目下某个api
+      async genProjectMenusApi(menuList, readList) {
+        for (let i = 0; i < this.catIds.length; i++) {
+          for (let index = 0; index < menuList.length; index++) {
+            if (menuList[index]._id == getIds(this.catIds[i])) {
+              await this.page.click(
+                `.interface-list > li:nth-child(${index + 2})`
+              );
+              const { add } = await this.gen(
+                `请选择需要生成${menuList[index].name || menuList[index].desc}接口的文件(项目名:${this.projectName}(接口共${menuList[index].list.length}个))`
+              );
+
+              if (menuList[index].list) {
+                await add(menuList[index], this.catIds[i], readList, true);
+              }
+
+              break;
+            }
+          }
+        }
+      },
     };
   }
   async request(url) {
@@ -441,10 +518,16 @@ global.Generator = class Generator {
   getData(url) {
     return new Promise((resolve, reject) => {
       this.page.on("response", async (response) => {
-        if (response.url() === url && response.status() === 200) {
+        if (
+          new RegExp(url, "g").test(response.url()) &&
+          response.status() === 200
+        ) {
           const res = await response.json();
-          if (res.errcode != 0) {
-            spinner.fail(res.errmsg);
+          if (
+            !res.success ||
+            (res[this.codeKey] && res[this.codeKey || "errcode"] != 0)
+          ) {
+            spinner.fail(res[this.msgKey || "errmsg"]);
             process.exit();
           }
           resolve(res.data);

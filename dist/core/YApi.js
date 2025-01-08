@@ -19,8 +19,7 @@ module.exports = /*#__PURE__*/function (_global$Generator) {
     var _this;
     (0, _classCallCheck2.default)(this, YApi);
     _this = _callSuper(this, YApi, [config]);
-    // 默认域名
-    _this.config.docUrl = _this.config.docUrl.replace(/\/$/, "") || "http://api.doc.jiyou-tech.com";
+    _this.setDocUrl("http://api.doc.jiyou-tech.com");
     return _this;
   }
   (0, _inherits2.default)(YApi, _global$Generator);
@@ -137,7 +136,7 @@ module.exports = /*#__PURE__*/function (_global$Generator) {
                         return _this2.page.goto(_this2.apiUrl);
                       case 48:
                         // 监听当前接口返回数据
-                        _this2.getData("".concat(_this2.config.docUrl, "/api/interface/list_menu?project_id=").concat(opt.projectId)).then(/*#__PURE__*/function () {
+                        _this2.getData("/api/interface/list_menu?project_id=".concat(opt.projectId)).then(/*#__PURE__*/function () {
                           var _ref2 = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee2(menuList) {
                             var readList, mIndex, res, _yield$_this2$gen, add, ids, noIds, i, _index, _yield$_this2$gen2, _add;
                             return _regenerator.default.wrap(function _callee2$(_context2) {
