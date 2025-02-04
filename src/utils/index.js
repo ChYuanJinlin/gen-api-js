@@ -18,14 +18,14 @@ const getFilenames = (dir, callback) => {
 
   fs.readdir(dir, (err, files) => {
     if (err) throw err;
-    files.forEach((file,index) => {
+    files.forEach((file, index) => {
       let fullPath = path.join(dir, file);
       fs.stat(fullPath, (err, stats) => {
         if (err) throw err;
         if (stats.isDirectory()) {
           getFilenames(fullPath, callback);
         } else {
-          callback(fullPath,files,index);
+          callback(fullPath, files, index);
         }
       });
     });
@@ -116,6 +116,9 @@ module.exports = {
   },
   // 判断一下生成的类型  使用方式: catids:[111,'开始下标-结束下标']下标是从1开始(生成下标范围api)  catids:[111,3]生成单独某一项(传下标|id|菜单名称)catids:[111,'1 3 5]批量生成对应的项(传下标|id|菜单名称) catids:[111,'-xxx] 排除当前这项(传下标|id|菜单名称)
   getGenType(catIds, curIndex, item) {
+    if (!item.path) {
+      return;
+    }
     const excludes = [];
     const arr = [curIndex, item._id, item.title];
     const regex = /-(\d+)(?![-\d])/g;

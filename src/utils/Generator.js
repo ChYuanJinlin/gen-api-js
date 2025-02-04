@@ -116,6 +116,11 @@ global.Generator = class Generator {
     this.msgKey = msgKey;
     this.codeKey = codeKey;
   }
+  isProjectId() {
+    return this.config.projects.every(
+      (item) => typeof item === "string" || typeof item === "number"
+    );
+  }
   isCatIds(catIds, resolve) {
     if (catIds && Array.isArray(catIds)) {
       const oldCatIds = this.cacheData[this.cacheKey.name]?.[index]?.ids || [];
@@ -294,8 +299,9 @@ global.Generator = class Generator {
   getReadFiles() {
     this.readFiles = fs.readFileSync(this.selectName, "utf-8");
   }
-  async gen(message) {
+  async gen(message, options = {}) {
     if (message) {
+      this.spinner.stop();
       const { type } = await inquirer.prompt([
         {
           type: "list",
@@ -326,70 +332,72 @@ global.Generator = class Generator {
       this.paths = [...new Set(this.paths)];
     }
     return {
-      add: async (data, catIds, fn, isRepeat = true) => {
+      add: async (data, catIds, fn, flag = false) => {
         for (let lIndex = 0; lIndex < data.list.length; lIndex++) {
           const item = data.list[lIndex];
-          if (isRepeat) {
-            // 如果没有重复的项则生成
-            if (
-              !this.paths.includes(item.path.replace(/\{|\}/g, "")) &&
-              getGenType(catIds, lIndex + 1, item)
-            ) {
-              this.spinner.start(`正在生成${item.title}接口中...`);
-              log(() => {
-                if (data.list.length - 1 === lIndex)
-                  this.spinner.succeed("已全部生成完毕");
-              });
-              if (this.config.typescript) {
-                const detail = await fn(lIndex + 1, item);
-                item.detail = detail;
-              }
 
-              apiNum++;
-              let restFul = "";
-              // 替换掉特殊字符串
-              item.path = item.path.replace(/(\{\w+\})/g, (value) => {
-                restFul = value.replace(/\{|\}/g, "");
+          // 如果没有重复的项则生成
+          if (
+            /\w/g.test(item.path) &&
+            (flag ||
+              (!this.paths.includes(item.path.replace(/\{|\}/g, "")) &&
+                getGenType(catIds, lIndex + 1, item)))
+          ) {
+            this.spinner.start(`正在生成${item.title}接口中...`);
+            log(() => {
+              if (data.list.length - 1 === lIndex)
+                this.spinner.succeed("已全部生成完毕");
+            });
+            if (this.config.typescript) {
+              const detail = await fn(lIndex + 1, item);
+              item.detail = detail;
+            }
 
-                return "$" + value;
-              });
-              item.formatPaths = toCamelCase(
-                item.path.replace(/(\/\$\{\w+\})/g, "")
-              )
-                .match(/[A-Z][^A-Z]*/g)
-                .map((str) => str.replace(specialChat, ""));
-              // 转为驼峰命名
-              let apiName =
-                (this.config.getRequestFunctionName &&
-                  this.config.getRequestFunctionName(
-                    toCamelCase(item.path),
-                    item,
-                    toCamelCase
-                  )) ||
-                (this.config.getRequestFunctionName &&
-                  this.config.getRequestFunctionName(
-                    toCamelCase(item.path),
-                    item,
-                    toCamelCase
-                  )) ||
-                toCamelCase(item.path);
+            apiNum++;
+            let restFul = "";
+            // 替换掉特殊字符串
+            item.path = item.path.replace(/(\{\w+\})/g, (value) => {
+              restFul = value.replace(/\{|\}/g, "");
 
-              apiName = toCamelCase(
-                apiName
-                  .replace("${" + restFul, "by")
-                  .replace("}", "/" + restFul)
-                  .replace("/", "")
-              );
-              apiName = (
-                apiName.charAt(0).toLowerCase() + apiName.slice(1)
-              ).replace(specialChat, "");
+              return "$" + value;
+            });
+            item.formatPaths = toCamelCase(
+              item.path.replace(/(\/\$\{\w+\})/g, "")
+            )
+              .match(/[A-Z][^A-Z]*/g)
+              ?.map((str) => str.replace(specialChat, ""));
+            // 转为驼峰命名
+            let apiName =
+              (this.config.getRequestFunctionName &&
+                this.config.getRequestFunctionName(
+                  toCamelCase(item.path),
+                  item,
+                  toCamelCase
+                )) ||
+              (this.config.getRequestFunctionName &&
+                this.config.getRequestFunctionName(
+                  toCamelCase(item.path),
+                  item,
+                  toCamelCase
+                )) ||
+              toCamelCase(item.path);
 
-              this.apiNames.push(apiName);
-              this.totalApiNames.push(apiName);
-              this.names.push(item.title);
+            apiName = toCamelCase(
+              apiName
+                .replace("${" + restFul, "by")
+                .replace("}", "/" + restFul)
+                .replace("/", "")
+            );
+            apiName = (
+              apiName.charAt(0).toLowerCase() + apiName.slice(1)
+            ).replace(specialChat, "");
 
-              this.apis.push(
-                await this.setRequestTemplate({
+            this.apiNames.push(apiName);
+            this.totalApiNames.push(apiName);
+            this.names.push(item.title);
+            this.apis.push(
+              await this.setRequestTemplate(
+                Object.assign(options, {
                   ...item,
                   title: item.title,
                   method: item.method.toLocaleLowerCase(),
@@ -397,12 +405,16 @@ global.Generator = class Generator {
                   requestFunc: this.opt.requestFunc,
                   restFul,
                   apiNum,
-                  projectName: `${this.projectName}(${this.apiUrl}/cat_${item.catid})`,
+                  projectName:
+                    (typeof options.projectName === "function"
+                      ? options.projectName(item)
+                      : options.projectName) ||
+                    `${this.projectName}(${this.apiUrl}/cat_${item.catid})`,
                   url: this.getUrl(item._id).menuUrl,
                   path: item.path,
                 })
-              );
-            }
+              )
+            );
           }
         }
 
@@ -411,45 +423,50 @@ global.Generator = class Generator {
         }
         return Promise.resolve();
       },
-      // 生成项目所有的api
-      async genAllApi(menuList) {
-        this.selectName = "";
-        for (let mIndex = 0; mIndex < menuList.length; mIndex++) {
-          if (!this.selectName) {
-            await this.gen("请选择需要生成所有接口的文件");
-          }
-          (await this.gen()).add(menuList[mIndex]);
-        }
-      },
-      // 生产项目下所有的api
-      async genProjectApi(menuList, readList) {
-        const { add } = await this.gen(
-          `请选择需要生成${this.projectName}项目接口文件((接口共${menuList.list.length}个))`
-        );
-        await add(list, undefined, readList);
-      },
-      // 生成项目下某个api
-      async genProjectMenusApi(menuList, readList) {
-        for (let i = 0; i < this.catIds.length; i++) {
-          for (let index = 0; index < menuList.length; index++) {
-            if (menuList[index]._id == getIds(this.catIds[i])) {
-              await this.page.click(
-                `.interface-list > li:nth-child(${index + 2})`
-              );
-              const { add } = await this.gen(
-                `请选择需要生成${menuList[index].name || menuList[index].desc}接口的文件(项目名:${this.projectName}(接口共${menuList[index].list.length}个))`
-              );
-
-              if (menuList[index].list) {
-                await add(menuList[index], this.catIds[i], readList, true);
-              }
-
-              break;
-            }
-          }
-        }
-      },
     };
+  }
+
+  // 生成项目所有的api
+  async genAllApi(menuList, options) {
+    this.selectName = "";
+    for (let mIndex = 0; mIndex < menuList.length; mIndex++) {
+      try {
+        if (!this.selectName) {
+          await this.gen("请选择需要生成所有接口的文件", options);
+        }
+        (await this.gen(null, options)).add(menuList[mIndex], null, null, true);
+      } catch (error) {
+        console.log("🚀 ~ genAllApi ~ error:", error);
+      }
+    }
+    return Promise.resolve();
+  }
+  // 生成当前菜单下所有的api
+  async genProjectApi(menuList, readList, options) {
+    const { add } = await this.gen(
+      `请选择需要生成${this.projectName}项目接口文件((接口共${menuList.list.length}个))`,
+      options
+    );
+    await add(list, undefined, readList);
+  }
+  // 生成项目下某个api
+  async genProjectMenusApi(menuList, readList, options) {
+    for (let i = 0; i < this.catIds.length; i++) {
+      for (let index = 0; index < menuList.length; index++) {
+        if (menuList[index]._id == getIds(this.catIds[i])) {
+          const { add } = await this.gen(
+            `请选择需要生成${menuList[index].name || menuList[index].desc}接口的文件(项目名:${this.projectName}(接口共${menuList[index].list.length}个))`,
+            options
+          );
+
+          if (menuList[index].list) {
+            await add(menuList[index], this.catIds[i], readList, true);
+          }
+
+          break;
+        }
+      }
+    }
   }
   async request(url) {
     return await getRes(this.page, url, this.spinner);

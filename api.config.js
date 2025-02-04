@@ -54,5 +54,5 @@ module.exports = {
   }, */
   // api项目配置项
   // 配置选项:  如果要生成当前项目下所有的接口只需要传项目id过来即可 projectId 是必填项 使用方式:catIds:[xxx] 批量使用传参:catIds:[xxx,'开始下标-结束下标']下标是从1开始(生成下标范围api)  catIds:[xxx,3]生成单独某一项(传下标|id|菜单名称)catIds:[xxx,'1 3 5]批量生成对应的项(传下标|id|菜单名称) catIds:[xxx,'-xxx] 排除当前这项(传下标|id|菜单名称)
-  projects: [{projectId:5648510}],
+  projects: [5648510],
 };

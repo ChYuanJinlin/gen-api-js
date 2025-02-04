@@ -1,5 +1,17 @@
 
 
+## [0.0.7](https://github.com/ChYuanJinlin/gen-api-js/compare/v0.0.4...v0.0.7) (2024-12-04)
+
+
+###  问题修复
+
+* 修改生成ts 模板 没有请求类型 ([6c39e52](https://github.com/ChYuanJinlin/gen-api-js/commit/6c39e522e08be009f18efcb4ae4689014a223f4a))
+
+
+###  文档
+
+* **修改文档:** 修改文档 ([ea38f53](https://github.com/ChYuanJinlin/gen-api-js/commit/ea38f53bdb10b9352779cd43d1b51724308c9eaa))
+
 ## [0.0.4](https://github.com/ChYuanJinlin/gen-api-js/compare/v0.0.2...v0.0.4) (2024-11-28)
 
 

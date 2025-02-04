@@ -146,6 +146,9 @@ module.exports = {
   },
   // 判断一下生成的类型  使用方式: catids:[111,'开始下标-结束下标']下标是从1开始(生成下标范围api)  catids:[111,3]生成单独某一项(传下标|id|菜单名称)catids:[111,'1 3 5]批量生成对应的项(传下标|id|菜单名称) catids:[111,'-xxx] 排除当前这项(传下标|id|菜单名称)
   getGenType: function getGenType(catIds, curIndex, item) {
+    if (!item.path) {
+      return;
+    }
     var excludes = [];
     var arr = [curIndex, item._id, item.title];
     var regex = /-(\d+)(?![-\d])/g;

@@ -202,7 +202,7 @@ module.exports = /*#__PURE__*/function (_global$Generator) {
                                   _context2.next = 17;
                                   return _this2.gen();
                                 case 17:
-                                  _context2.sent.add(menuList[mIndex]);
+                                  _context2.sent.add(menuList[mIndex], null, null, true);
                                 case 18:
                                   mIndex++;
                                   _context2.next = 11;
@@ -273,7 +273,7 @@ module.exports = /*#__PURE__*/function (_global$Generator) {
                                     break;
                                   }
                                   _context2.next = 55;
-                                  return _add(menuList[_index], _this2.catIds[i], readList, true);
+                                  return _add(menuList[_index], _this2.catIds[i], readList);
                                 case 55:
                                   return _context2.abrupt("break", 59);
                                 case 56:

@@ -138,6 +138,13 @@ global.Generator = /*#__PURE__*/function () {
       this.codeKey = codeKey;
     }
   }, {
+    key: "isProjectId",
+    value: function isProjectId() {
+      return this.config.projects.every(function (item) {
+        return typeof item === "string" || typeof item === "number";
+      });
+    }
+  }, {
     key: "isCatIds",
     value: function isCatIds(catIds, resolve) {
       if (catIds && Array.isArray(catIds)) {
@@ -304,22 +311,27 @@ global.Generator = /*#__PURE__*/function () {
     value: function () {
       var _gen = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee5(message) {
         var _this4 = this;
-        var _yield$inquirer$promp, type;
+        var options,
+          _yield$inquirer$promp,
+          type,
+          _args6 = arguments;
         return _regenerator.default.wrap(function _callee5$(_context6) {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
+              options = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : {};
               if (!message) {
-                _context6.next = 11;
+                _context6.next = 13;
                 break;
               }
-              _context6.next = 3;
+              this.spinner.stop();
+              _context6.next = 5;
               return inquirer.prompt([{
                 type: "list",
                 message: message,
                 name: "type",
                 choices: this.files
               }]);
-            case 3:
+            case 5:
               _yield$inquirer$promp = _context6.sent;
               type = _yield$inquirer$promp.type;
               this.selectName = type;
@@ -340,29 +352,25 @@ global.Generator = /*#__PURE__*/function () {
                 return item;
               });
               this.paths = (0, _toConsumableArray2.default)(new Set(this.paths));
-            case 11:
+            case 13:
               return _context6.abrupt("return", {
                 add: function () {
                   var _add = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee4(data, catIds, fn) {
-                    var isRepeat,
+                    var flag,
                       _loop,
                       lIndex,
                       _args5 = arguments;
                     return _regenerator.default.wrap(function _callee4$(_context5) {
                       while (1) switch (_context5.prev = _context5.next) {
                         case 0:
-                          isRepeat = _args5.length > 3 && _args5[3] !== undefined ? _args5[3] : true;
+                          flag = _args5.length > 3 && _args5[3] !== undefined ? _args5[3] : false;
                           _loop = /*#__PURE__*/_regenerator.default.mark(function _loop(lIndex) {
-                            var item, detail, restFul, apiName;
+                            var item, _toCamelCase$match, detail, restFul, apiName;
                             return _regenerator.default.wrap(function _loop$(_context4) {
                               while (1) switch (_context4.prev = _context4.next) {
                                 case 0:
-                                  item = data.list[lIndex];
-                                  if (!isRepeat) {
-                                    _context4.next = 25;
-                                    break;
-                                  }
-                                  if (!(!_this4.paths.includes(item.path.replace(/\{|\}/g, "")) && getGenType(catIds, lIndex + 1, item))) {
+                                  item = data.list[lIndex]; // 如果没有重复的项则生成
+                                  if (!(/\w/g.test(item.path) && (flag || !_this4.paths.includes(item.path.replace(/\{|\}/g, "")) && getGenType(catIds, lIndex + 1, item)))) {
                                     _context4.next = 25;
                                     break;
                                   }
@@ -371,22 +379,23 @@ global.Generator = /*#__PURE__*/function () {
                                     if (data.list.length - 1 === lIndex) _this4.spinner.succeed("已全部生成完毕");
                                   });
                                   if (!_this4.config.typescript) {
-                                    _context4.next = 10;
+                                    _context4.next = 9;
                                     break;
                                   }
-                                  _context4.next = 8;
+                                  _context4.next = 7;
                                   return fn(lIndex + 1, item);
-                                case 8:
+                                case 7:
                                   detail = _context4.sent;
                                   item.detail = detail;
-                                case 10:
+                                case 9:
                                   apiNum++;
                                   restFul = ""; // 替换掉特殊字符串
                                   item.path = item.path.replace(/(\{\w+\})/g, function (value) {
                                     restFul = value.replace(/\{|\}/g, "");
                                     return "$" + value;
                                   });
-                                  item.formatPaths = toCamelCase(item.path.replace(/(\/\$\{\w+\})/g, "")).match(/[A-Z][^A-Z]*/g).map(function (str) {
+                                  console.log("toCamelCase", toCamelCase(item.path.replace(/(\/\$\{\w+\})/g, "")).match(/[A-Z][^A-Z]*/g));
+                                  item.formatPaths = (_toCamelCase$match = toCamelCase(item.path.replace(/(\/\$\{\w+\})/g, "")).match(/[A-Z][^A-Z]*/g)) === null || _toCamelCase$match === void 0 ? void 0 : _toCamelCase$match.map(function (str) {
                                     return str.replace(specialChat, "");
                                   });
                                   // 转为驼峰命名
@@ -398,17 +407,17 @@ global.Generator = /*#__PURE__*/function () {
                                   _this4.names.push(item.title);
                                   _context4.t0 = _this4.apis;
                                   _context4.next = 23;
-                                  return _this4.setRequestTemplate(_objectSpread(_objectSpread({}, item), {}, {
+                                  return _this4.setRequestTemplate(Object.assign(options, _objectSpread(_objectSpread({}, item), {}, {
                                     title: item.title,
                                     method: item.method.toLocaleLowerCase(),
                                     apiName: apiName,
                                     requestFunc: _this4.opt.requestFunc,
                                     restFul: restFul,
                                     apiNum: apiNum,
-                                    projectName: "".concat(_this4.projectName, "(").concat(_this4.apiUrl, "/cat_").concat(item.catid, ")"),
+                                    projectName: (typeof options.projectName === "function" ? options.projectName(item) : options.projectName) || "".concat(_this4.projectName, "(").concat(_this4.apiUrl, "/cat_").concat(item.catid, ")"),
                                     url: _this4.getUrl(item._id).menuUrl,
                                     path: item.path
-                                  }));
+                                  })));
                                 case 23:
                                   _context4.t1 = _context4.sent;
                                   _context4.t0.push.call(_context4.t0, _context4.t1);
@@ -446,7 +455,7 @@ global.Generator = /*#__PURE__*/function () {
                   return add;
                 }()
               });
-            case 12:
+            case 14:
             case "end":
               return _context6.stop();
           }
@@ -456,25 +465,157 @@ global.Generator = /*#__PURE__*/function () {
         return _gen.apply(this, arguments);
       }
       return gen;
+    }() // 生成项目所有的api
+  }, {
+    key: "genAllApi",
+    value: function () {
+      var _genAllApi = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee6(menuList, options) {
+        var mIndex;
+        return _regenerator.default.wrap(function _callee6$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
+            case 0:
+              this.selectName = "";
+              mIndex = 0;
+            case 2:
+              if (!(mIndex < menuList.length)) {
+                _context7.next = 18;
+                break;
+              }
+              _context7.prev = 3;
+              if (this.selectName) {
+                _context7.next = 7;
+                break;
+              }
+              _context7.next = 7;
+              return this.gen("请选择需要生成所有接口的文件", options);
+            case 7:
+              _context7.next = 9;
+              return this.gen(null, options);
+            case 9:
+              _context7.sent.add(menuList[mIndex], null, null, true);
+              _context7.next = 15;
+              break;
+            case 12:
+              _context7.prev = 12;
+              _context7.t0 = _context7["catch"](3);
+              console.log("🚀 ~ genAllApi ~ error:", _context7.t0);
+            case 15:
+              mIndex++;
+              _context7.next = 2;
+              break;
+            case 18:
+              return _context7.abrupt("return", Promise.resolve());
+            case 19:
+            case "end":
+              return _context7.stop();
+          }
+        }, _callee6, this, [[3, 12]]);
+      }));
+      function genAllApi(_x9, _x10) {
+        return _genAllApi.apply(this, arguments);
+      }
+      return genAllApi;
+    }() // 生成当前菜单下所有的api
+  }, {
+    key: "genProjectApi",
+    value: function () {
+      var _genProjectApi = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee7(menuList, readList, options) {
+        var _yield$this$gen, add;
+        return _regenerator.default.wrap(function _callee7$(_context8) {
+          while (1) switch (_context8.prev = _context8.next) {
+            case 0:
+              _context8.next = 2;
+              return this.gen("\u8BF7\u9009\u62E9\u9700\u8981\u751F\u6210".concat(this.projectName, "\u9879\u76EE\u63A5\u53E3\u6587\u4EF6((\u63A5\u53E3\u5171").concat(menuList.list.length, "\u4E2A))"), options);
+            case 2:
+              _yield$this$gen = _context8.sent;
+              add = _yield$this$gen.add;
+              _context8.next = 6;
+              return add(list, undefined, readList);
+            case 6:
+            case "end":
+              return _context8.stop();
+          }
+        }, _callee7, this);
+      }));
+      function genProjectApi(_x11, _x12, _x13) {
+        return _genProjectApi.apply(this, arguments);
+      }
+      return genProjectApi;
+    }() // 生成项目下某个api
+  }, {
+    key: "genProjectMenusApi",
+    value: function () {
+      var _genProjectMenusApi = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee8(menuList, readList, options) {
+        var i, _index, _yield$this$gen2, add;
+        return _regenerator.default.wrap(function _callee8$(_context9) {
+          while (1) switch (_context9.prev = _context9.next) {
+            case 0:
+              i = 0;
+            case 1:
+              if (!(i < this.catIds.length)) {
+                _context9.next = 19;
+                break;
+              }
+              _index = 0;
+            case 3:
+              if (!(_index < menuList.length)) {
+                _context9.next = 16;
+                break;
+              }
+              if (!(menuList[_index]._id == getIds(this.catIds[i]))) {
+                _context9.next = 13;
+                break;
+              }
+              _context9.next = 7;
+              return this.gen("\u8BF7\u9009\u62E9\u9700\u8981\u751F\u6210".concat(menuList[_index].name || menuList[_index].desc, "\u63A5\u53E3\u7684\u6587\u4EF6(\u9879\u76EE\u540D:").concat(this.projectName, "(\u63A5\u53E3\u5171").concat(menuList[_index].list.length, "\u4E2A))"), options);
+            case 7:
+              _yield$this$gen2 = _context9.sent;
+              add = _yield$this$gen2.add;
+              if (!menuList[_index].list) {
+                _context9.next = 12;
+                break;
+              }
+              _context9.next = 12;
+              return add(menuList[_index], this.catIds[i], readList, true);
+            case 12:
+              return _context9.abrupt("break", 16);
+            case 13:
+              _index++;
+              _context9.next = 3;
+              break;
+            case 16:
+              i++;
+              _context9.next = 1;
+              break;
+            case 19:
+            case "end":
+              return _context9.stop();
+          }
+        }, _callee8, this);
+      }));
+      function genProjectMenusApi(_x14, _x15, _x16) {
+        return _genProjectMenusApi.apply(this, arguments);
+      }
+      return genProjectMenusApi;
     }()
   }, {
     key: "request",
     value: function () {
-      var _request = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee6(url) {
-        return _regenerator.default.wrap(function _callee6$(_context7) {
-          while (1) switch (_context7.prev = _context7.next) {
+      var _request = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee9(url) {
+        return _regenerator.default.wrap(function _callee9$(_context10) {
+          while (1) switch (_context10.prev = _context10.next) {
             case 0:
-              _context7.next = 2;
+              _context10.next = 2;
               return getRes(this.page, url, this.spinner);
             case 2:
-              return _context7.abrupt("return", _context7.sent);
+              return _context10.abrupt("return", _context10.sent);
             case 3:
             case "end":
-              return _context7.stop();
+              return _context10.stop();
           }
-        }, _callee6, this);
+        }, _callee9, this);
       }));
-      function request(_x9) {
+      function request(_x17) {
         return _request.apply(this, arguments);
       }
       return request;
@@ -486,35 +627,35 @@ global.Generator = /*#__PURE__*/function () {
       return {
         // 写入接口
         writeApi: function () {
-          var _writeApi = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee7() {
-            return _regenerator.default.wrap(function _callee7$(_context8) {
-              while (1) switch (_context8.prev = _context8.next) {
+          var _writeApi = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee10() {
+            return _regenerator.default.wrap(function _callee10$(_context11) {
+              while (1) switch (_context11.prev = _context11.next) {
                 case 0:
                   if (!_this5.totalApiNames.length) {
-                    _context8.next = 12;
+                    _context11.next = 12;
                     break;
                   }
                   _this5.spinner.start(!_this5.paths.length ? "\u6B63\u5728\u5199\u5165\u6587\u4EF6\u4E2D...\n" : "\u6B63\u5728\u66F4\u65B0\u6587\u4EF6\u4E2D...\n");
-                  _context8.t0 = fs;
-                  _context8.t1 = _this5.selectName;
-                  _context8.next = 6;
+                  _context11.t0 = fs;
+                  _context11.t1 = _this5.selectName;
+                  _context11.next = 6;
                   return prettier.format(_this5.apis.join("\n"), {
                     parser: _this5.config.typescript ? "typescript" : "babel"
                   });
                 case 6:
-                  _context8.t2 = _context8.sent;
-                  _context8.t0.appendFileSync.call(_context8.t0, _context8.t1, _context8.t2);
+                  _context11.t2 = _context11.sent;
+                  _context11.t0.appendFileSync.call(_context11.t0, _context11.t1, _context11.t2);
                   _this5.spinner.succeed(!_this5.paths.length ? "文件写入成功" : "\u6587\u4EF6\u66F4\u65B0\u6210\u529F").succeed("\u6210\u529F\u751F\u6210".concat(_this5.projectName, "\u9879\u76EE(").concat(_this5.names.length, "\u4E2A\u63A5\u53E3):"));
                   log("\u83DC\u5355\u6807\u9898:".concat(_this5.names.join(",")), "\u751F\u6210\u63A5\u53E3\u540D\u79F0:".concat(_this5.apiNames.join(",")));
                   _this5.apiNames = [];
                   _this5.names = [];
                 case 12:
-                  return _context8.abrupt("return", _this5.createWriteFile());
+                  return _context11.abrupt("return", _this5.createWriteFile());
                 case 13:
                 case "end":
-                  return _context8.stop();
+                  return _context11.stop();
               }
-            }, _callee7);
+            }, _callee10);
           }));
           function writeApi() {
             return _writeApi.apply(this, arguments);
@@ -547,19 +688,19 @@ global.Generator = /*#__PURE__*/function () {
       var _this6 = this;
       return new Promise(function (resolve, reject) {
         _this6.page.on("response", /*#__PURE__*/function () {
-          var _ref3 = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee8(response) {
+          var _ref3 = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee11(response) {
             var res;
-            return _regenerator.default.wrap(function _callee8$(_context9) {
-              while (1) switch (_context9.prev = _context9.next) {
+            return _regenerator.default.wrap(function _callee11$(_context12) {
+              while (1) switch (_context12.prev = _context12.next) {
                 case 0:
                   if (!(new RegExp(url, "g").test(response.url()) && response.status() === 200)) {
-                    _context9.next = 6;
+                    _context12.next = 6;
                     break;
                   }
-                  _context9.next = 3;
+                  _context12.next = 3;
                   return response.json();
                 case 3:
-                  res = _context9.sent;
+                  res = _context12.sent;
                   if (!res.success || res[_this6.codeKey] && res[_this6.codeKey || "errcode"] != 0) {
                     spinner.fail(res[_this6.msgKey || "errmsg"]);
                     process.exit();
@@ -567,11 +708,11 @@ global.Generator = /*#__PURE__*/function () {
                   resolve(res.data);
                 case 6:
                 case "end":
-                  return _context9.stop();
+                  return _context12.stop();
               }
-            }, _callee8);
+            }, _callee11);
           }));
-          return function (_x10) {
+          return function (_x18) {
             return _ref3.apply(this, arguments);
           };
         }());

@@ -122,7 +122,7 @@ module.exports = class YApi extends global.Generator {
               if (!this.selectName) {
                 await this.gen("请选择需要生成所有接口的文件");
               }
-              (await this.gen()).add(menuList[mIndex]);
+              (await this.gen()).add(menuList[mIndex], null, null, true);
             }
           } else {
             if (!this.opt.catIds) {
@@ -159,12 +159,7 @@ module.exports = class YApi extends global.Generator {
                     );
 
                     if (menuList[index].list) {
-                      await add(
-                        menuList[index],
-                        this.catIds[i],
-                        readList,
-                        true
-                      );
+                      await add(menuList[index], this.catIds[i], readList);
                     }
 
                     break;
