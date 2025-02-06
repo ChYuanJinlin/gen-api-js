@@ -10,6 +10,7 @@ const {
   toCamelCase,
   getRes,
   getGenType,
+  getIds,
   log,
   getNum,
 } = require("./index");
@@ -447,26 +448,29 @@ global.Generator = class Generator {
       `请选择需要生成${this.projectName}项目接口文件((接口共${menuList.list.length}个))`,
       options
     );
-    await add(list, undefined, readList);
+    await add(menuList, undefined, readList);
+
+    return Promise.resolve();
   }
   // 生成项目下某个api
   async genProjectMenusApi(menuList, readList, options) {
     for (let i = 0; i < this.catIds.length; i++) {
       for (let index = 0; index < menuList.length; index++) {
-        if (menuList[index]._id == getIds(this.catIds[i])) {
+        if (menuList[index]._id === getIds(this.catIds[i])) {
           const { add } = await this.gen(
             `请选择需要生成${menuList[index].name || menuList[index].desc}接口的文件(项目名:${this.projectName}(接口共${menuList[index].list.length}个))`,
             options
           );
 
           if (menuList[index].list) {
-            await add(menuList[index], this.catIds[i], readList, true);
+            await add(menuList[index], this.catIds[i], readList);
           }
 
           break;
         }
       }
     }
+    return Promise.resolve();
   }
   async request(url) {
     return await getRes(this.page, url, this.spinner);

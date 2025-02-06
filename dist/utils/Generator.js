@@ -22,6 +22,7 @@ var _require = require("./index"),
   toCamelCase = _require.toCamelCase,
   getRes = _require.getRes,
   getGenType = _require.getGenType,
+  getIds = _require.getIds,
   log = _require.log,
   getNum = _require.getNum;
 var _require2 = require("./toTs"),
@@ -371,7 +372,7 @@ global.Generator = /*#__PURE__*/function () {
                                 case 0:
                                   item = data.list[lIndex]; // 如果没有重复的项则生成
                                   if (!(/\w/g.test(item.path) && (flag || !_this4.paths.includes(item.path.replace(/\{|\}/g, "")) && getGenType(catIds, lIndex + 1, item)))) {
-                                    _context4.next = 25;
+                                    _context4.next = 24;
                                     break;
                                   }
                                   _this4.spinner.start("\u6B63\u5728\u751F\u6210".concat(item.title, "\u63A5\u53E3\u4E2D..."));
@@ -394,7 +395,6 @@ global.Generator = /*#__PURE__*/function () {
                                     restFul = value.replace(/\{|\}/g, "");
                                     return "$" + value;
                                   });
-                                  console.log("toCamelCase", toCamelCase(item.path.replace(/(\/\$\{\w+\})/g, "")).match(/[A-Z][^A-Z]*/g));
                                   item.formatPaths = (_toCamelCase$match = toCamelCase(item.path.replace(/(\/\$\{\w+\})/g, "")).match(/[A-Z][^A-Z]*/g)) === null || _toCamelCase$match === void 0 ? void 0 : _toCamelCase$match.map(function (str) {
                                     return str.replace(specialChat, "");
                                   });
@@ -406,7 +406,7 @@ global.Generator = /*#__PURE__*/function () {
                                   _this4.totalApiNames.push(apiName);
                                   _this4.names.push(item.title);
                                   _context4.t0 = _this4.apis;
-                                  _context4.next = 23;
+                                  _context4.next = 22;
                                   return _this4.setRequestTemplate(Object.assign(options, _objectSpread(_objectSpread({}, item), {}, {
                                     title: item.title,
                                     method: item.method.toLocaleLowerCase(),
@@ -418,10 +418,10 @@ global.Generator = /*#__PURE__*/function () {
                                     url: _this4.getUrl(item._id).menuUrl,
                                     path: item.path
                                   })));
-                                case 23:
+                                case 22:
                                   _context4.t1 = _context4.sent;
                                   _context4.t0.push.call(_context4.t0, _context4.t1);
-                                case 25:
+                                case 24:
                                 case "end":
                                   return _context4.stop();
                               }
@@ -530,8 +530,10 @@ global.Generator = /*#__PURE__*/function () {
               _yield$this$gen = _context8.sent;
               add = _yield$this$gen.add;
               _context8.next = 6;
-              return add(list, undefined, readList);
+              return add(menuList, undefined, readList);
             case 6:
+              return _context8.abrupt("return", Promise.resolve());
+            case 7:
             case "end":
               return _context8.stop();
           }
@@ -562,7 +564,7 @@ global.Generator = /*#__PURE__*/function () {
                 _context9.next = 16;
                 break;
               }
-              if (!(menuList[_index]._id == getIds(this.catIds[i]))) {
+              if (!(menuList[_index]._id === getIds(this.catIds[i]))) {
                 _context9.next = 13;
                 break;
               }
@@ -576,7 +578,7 @@ global.Generator = /*#__PURE__*/function () {
                 break;
               }
               _context9.next = 12;
-              return add(menuList[_index], this.catIds[i], readList, true);
+              return add(menuList[_index], this.catIds[i], readList);
             case 12:
               return _context9.abrupt("break", 16);
             case 13:
@@ -588,6 +590,8 @@ global.Generator = /*#__PURE__*/function () {
               _context9.next = 1;
               break;
             case 19:
+              return _context9.abrupt("return", Promise.resolve());
+            case 20:
             case "end":
               return _context9.stop();
           }

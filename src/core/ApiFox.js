@@ -1,3 +1,4 @@
+const { getIds, getPageData } = require("../utils/index");
 module.exports = class ApiFox extends global.Generator {
   constructor(config) {
     super(config);
@@ -9,9 +10,7 @@ module.exports = class ApiFox extends global.Generator {
       projectUrl:
         this.config.docUrl +
         `/project/${this.projectId}/interface/api/cat_${catId}`,
-      menuUrl:
-        this.config.docUrl +
-        `/project/${this.projectId}/interface/api/${catId}`,
+      menuUrl: this.config.docUrl + `/project/${this.projectId}`,
       indexUrl: this.config.docUrl + `/project/${this.projectId}`,
     };
   }
@@ -49,7 +48,22 @@ module.exports = class ApiFox extends global.Generator {
           resolve(data);
         });
       };
+      const options = {
+        projectName: this.projectName,
+      };
       this.getData(`/api-tree-list`).then(async (menuList) => {
+        const readList = (lIndex, item) => {
+          return new Promise(async (resolve) => {
+            const data = await getPageData(
+              this.page,
+              this.config.docUrl +
+                `/api/v1/projects/${opt.projectId}/http-apis/${item.id}?locale=zh-CN`,
+              this.spinner
+            );
+            console.log("🚀 ~ ApiFox ~ returnnewPromise ~ data:", data);
+            resolve(data);
+          });
+        };
         let list = [],
           currentMenus = [];
         const diff = (obj) => {
@@ -73,20 +87,22 @@ module.exports = class ApiFox extends global.Generator {
           diff(item);
           item.list = list;
           list = [];
-          if (
-            (item.folder?.id ? item.folder?.id : item.api?.id) === opt.projectId
-          ) {
+          item._id = item.folder?.id ? item.folder?.id : item.api?.id;
+          if (item._id === getIds(this.catIds)) {
             currentMenus = item;
           }
         });
 
         if (this.isProjectId()) {
           // 生成项目下所有的api
-         await this.genAllApi(menuList);
+          await this.genAllApi(menuList, options);
         } else if (!this.opt.catIds) {
           // 如果当前没有分类只有项目则生成项目下的所有api
+          this.projectName = currentMenus.name;
+          await this.genProjectApi(currentMenus, readList, options);
         } else {
           // 生成某个api
+          await this.genProjectMenusApi(menuList, readList, options);
         }
 
         await this.createWriteFile().writeHeader().writeApi();

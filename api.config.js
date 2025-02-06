@@ -7,10 +7,10 @@ module.exports = {
   },
 
   docName: "apifox", // 在线文档网站名称
-  debug: true,//是否开启调试
+  debug: true, //是否开启调试
   docUrl: "https://app.apifox.com", //在线文档网站地址
   // cache:true,//是否开启缓存 默认为开启状态
-  // typescript:false,//语言类型 默认会根据文件类型去生成 
+  // typescript:false,//语言类型 默认会根据文件类型去生成
   // cacheFileName:"genApi.data.json",//缓存文件名称 默认为 genApi.data.json
   // 生成api的文件夹
   // apiFilePath: "api",// 会从src路径下寻找
@@ -50,9 +50,9 @@ module.exports = {
       }
 
     `;
-    }
+    }             
   }, */
   // api项目配置项
   // 配置选项:  如果要生成当前项目下所有的接口只需要传项目id过来即可 projectId 是必填项 使用方式:catIds:[xxx] 批量使用传参:catIds:[xxx,'开始下标-结束下标']下标是从1开始(生成下标范围api)  catIds:[xxx,3]生成单独某一项(传下标|id|菜单名称)catIds:[xxx,'1 3 5]批量生成对应的项(传下标|id|菜单名称) catIds:[xxx,'-xxx] 排除当前这项(传下标|id|菜单名称)
-  projects: [5648510],
+  projects: [{ projectId: 5648510, catIds: [[47593473, '246688713 246688714']] }],
 };
