@@ -46,7 +46,6 @@ async function quicktypeJSONSchema(typeName, jsonSchemaString) {
 
   const inputData = new InputData();
   inputData.addInput(schemaInput);
-  debugger;
   const { lines } = await quicktype({
     inputData,
     "export": true,

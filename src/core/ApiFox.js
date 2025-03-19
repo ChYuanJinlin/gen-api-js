@@ -1,5 +1,5 @@
-const { getIds, getPageData } = require("../utils/index");
-module.exports = class ApiFox extends global.Generator {
+const { getIds, getPageData, getRes } = require("../utils/index");
+module.exports = class ApiFox extends Generator {
   constructor(config) {
     super(config);
     this.setDocUrl("https://app.apifox.com");
@@ -21,47 +21,39 @@ module.exports = class ApiFox extends global.Generator {
     this.opt = opt;
     this.catIds = opt.catIds;
     this.index = index;
-    return new Promise(async (resolve, reject) => {
-      this.page = await this.browser.newPage();
-      await this.page.goto(this.indexUrl);
-      this.page.setDefaultTimeout(0);
-      const projectClass =
-        "#root > div > section > div > div.WebLayoutContainer_container__F2McA.WebLayoutContainer_webContainer__VHWYu > div.WebLayoutContainer_webTitleBar__269bc > div > div.h-full.flex-1 > nav > ol > li:nth-child(2) > span.ui-breadcrumb-overlay-link.cursor-pointer > span > div > div";
-      await this.page.waitForSelector(projectClass);
+    try {
+      return new Promise(async (resolve, reject) => {
+        this.page = await this.browser.newPage();
+        await this.page.goto(this.indexUrl);
+        this.page.setDefaultTimeout(0);
+        const projectClass =
+          "#root > div > section > div > div.container-PJZkzQ.webContainer-sdsCoJ > div.webTitleBar-pNIDD3 > div > div.h-full.flex-1 > nav > ol > li:nth-child(2) > span.ui-breadcrumb-overlay-link.cursor-pointer > span > div > div";
 
-      this.projectName = await this.page.$eval(
-        projectClass,
-        (el) => el.innerText
-      );
-      this.projectNames.push(`${this.projectName}(${this.indexUrl})`);
-      //   if (!this.isCatIds(this.catIds)) {
-      //     return false;
-      //   }
-      this.setFiles();
-      const readList = (lIndex, item) => {
-        return new Promise(async (resolve) => {
-          const data = await getPageData(
-            this.page,
-            this.config.docUrl + `/api/interface/get?id=${item._id}`,
-            this.spinner
-          );
-          resolve(data);
-        });
-      };
-      const options = {
-        projectName: this.projectName,
-      };
-      this.getData(`/api-tree-list`).then(async (menuList) => {
+        await this.page.waitForSelector(projectClass);
+
+        this.projectName = await this.page.$eval(
+          projectClass,
+          (el) => el.innerText
+        );
+
+        this.projectNames.push(`${this.projectName}(${this.indexUrl})`);
+        // if (!this.isCatIds(this.catIds)) {
+        //   resolve();
+        //   return
+        // }
+        this.setFiles();
+        const options = {
+          projectName: this.projectName,
+        };
+        const menuList = await this.getData(`/api-tree-list`);
+
+        // 获取详情
         const readList = (lIndex, item) => {
           return new Promise(async (resolve) => {
-            const data = await getPageData(
-              this.page,
-              this.config.docUrl +
-                `/api/v1/projects/${opt.projectId}/http-apis/${item.id}?locale=zh-CN`,
-              this.spinner
-            );
-            console.log("🚀 ~ ApiFox ~ returnnewPromise ~ data:", data);
-            resolve(data);
+            this.getData("/api-details").then(async (data) => {
+              console.log("🚀 ~ ApiFox ~ this.getData ~ data:", data);
+              resolve(data);
+            });
           });
         };
         let list = [],
@@ -72,6 +64,9 @@ module.exports = class ApiFox extends global.Generator {
               diff(item);
             });
           } else {
+            if (!obj.api) {
+              return;
+            }
             let apiObj = null;
             obj.api._id = obj.api.id;
             obj.api.title = obj.api.name;
@@ -108,6 +103,8 @@ module.exports = class ApiFox extends global.Generator {
         await this.createWriteFile().writeHeader().writeApi();
         resolve();
       });
-    });
+    } catch (error) {
+      console.log("🚀 ~ ApiFox ~ init ~ error:", error);
+    }
   }
 };

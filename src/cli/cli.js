@@ -2,7 +2,7 @@
 const { program } = require("commander");
 const path = require("path");
 const fs = require("fs");
-const { getFileData, createfolderFile } = require("../src/utils/index.js");
+const { getFileData, createfolderFile } = require("../utils/index.js");
 // 获取配置文件的数据
 const [configData, axiosData] = getFileData(
   "../config/api.config.js",
@@ -77,4 +77,4 @@ if (process.argv.length > 2) {
   program.parse(process.argv);
 }
 
-require("./gen-api");
+require("../gen-api");

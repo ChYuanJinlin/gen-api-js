@@ -104,7 +104,7 @@ module.exports = {
           }
           resolve(loginRes);
         } else {
-          return false;
+          this.spinner.fail("未知错误");
         }
       });
     });

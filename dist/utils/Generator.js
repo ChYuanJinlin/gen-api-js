@@ -395,11 +395,11 @@ global.Generator = /*#__PURE__*/function () {
                                     restFul = value.replace(/\{|\}/g, "");
                                     return "$" + value;
                                   });
-                                  item.formatPaths = (_toCamelCase$match = toCamelCase(item.path.replace(/(\/\$\{\w+\})/g, "")).match(/[A-Z][^A-Z]*/g)) === null || _toCamelCase$match === void 0 ? void 0 : _toCamelCase$match.map(function (str) {
+                                  item.formatPaths = (_toCamelCase$match = toCamelCase(item.path.replace(/(\/\$\{\w+\})/g, "") + "/" + item.method).match(/[A-Z][^A-Z]*/g)) === null || _toCamelCase$match === void 0 ? void 0 : _toCamelCase$match.map(function (str) {
                                     return str.replace(specialChat, "");
                                   });
                                   // 转为驼峰命名
-                                  apiName = _this4.config.getRequestFunctionName && _this4.config.getRequestFunctionName(toCamelCase(item.path), item, toCamelCase) || _this4.config.getRequestFunctionName && _this4.config.getRequestFunctionName(toCamelCase(item.path), item, toCamelCase) || toCamelCase(item.path);
+                                  apiName = _this4.config.getRequestFunctionName && _this4.config.getRequestFunctionName(toCamelCase(item.path + "/" + item.method), item, toCamelCase) || _this4.config.getRequestFunctionName && _this4.config.getRequestFunctionName(toCamelCase(item.path + "/" + item.method), item, toCamelCase) || toCamelCase(item.path + "/" + item.method);
                                   apiName = toCamelCase(apiName.replace("${" + restFul, "by").replace("}", "/" + restFul).replace("/", ""));
                                   apiName = (apiName.charAt(0).toLowerCase() + apiName.slice(1)).replace(specialChat, "");
                                   _this4.apiNames.push(apiName);

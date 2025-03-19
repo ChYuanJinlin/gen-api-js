@@ -80,6 +80,7 @@ global.Generator = class Generator {
             return {
               headless: config.debug ? !config.debug : true,
               devtools: config.debug ? !config.debug : true,
+              timeout: 0,
               ...defaultOptions,
               // slowMo: 50,
             };
@@ -91,7 +92,6 @@ global.Generator = class Generator {
       this.browser = await puppeteer[config.puppeteerOpt.method](
         Object.assign(defaultOptions, config.puppeteerOpt.run(puppeteer))
       );
-
       this.berforeInit(config);
     })();
     this.spinner = ora({
@@ -122,7 +122,7 @@ global.Generator = class Generator {
       (item) => typeof item === "string" || typeof item === "number"
     );
   }
-  isCatIds(catIds, resolve) {
+  isCatIds(catIds) {
     if (catIds && Array.isArray(catIds)) {
       const oldCatIds = this.cacheData[this.cacheKey.name]?.[index]?.ids || [];
 
@@ -130,7 +130,6 @@ global.Generator = class Generator {
         (item) => !oldCatIds.some((s) => getIds(s) === getIds(item))
       );
       if (!this.catIds.length) {
-        resolve();
         return false;
       }
     } else {
@@ -138,10 +137,10 @@ global.Generator = class Generator {
         this.cacheData[this.cacheKey.name]?.[this.index] &&
         this.cacheData[this.cacheKey.name][this.index].pid
       ) {
-        resolve();
         return false;
       }
     }
+    return true;
   }
   setFiles() {
     if (this.selectName) {
@@ -156,6 +155,7 @@ global.Generator = class Generator {
       }
 
       await promise;
+
       await this.init(
         typeof item == "object" ? item : { projectId: item },
         index
@@ -363,7 +363,7 @@ global.Generator = class Generator {
               return "$" + value;
             });
             item.formatPaths = toCamelCase(
-              item.path.replace(/(\/\$\{\w+\})/g, "")
+              item.path.replace(/(\/\$\{\w+\})/g, "") + "/" + item.method
             )
               .match(/[A-Z][^A-Z]*/g)
               ?.map((str) => str.replace(specialChat, ""));
@@ -371,17 +371,17 @@ global.Generator = class Generator {
             let apiName =
               (this.config.getRequestFunctionName &&
                 this.config.getRequestFunctionName(
-                  toCamelCase(item.path),
+                  toCamelCase(item.path + "/" + item.method),
                   item,
                   toCamelCase
                 )) ||
               (this.config.getRequestFunctionName &&
                 this.config.getRequestFunctionName(
-                  toCamelCase(item.path),
+                  toCamelCase(item.path + "/" + item.method),
                   item,
                   toCamelCase
                 )) ||
-              toCamelCase(item.path);
+              toCamelCase(item.path + "/" + item.method);
 
             apiName = toCamelCase(
               apiName
@@ -552,6 +552,8 @@ global.Generator = class Generator {
             process.exit();
           }
           resolve(res.data);
+        } else {
+          this.spinner.fail("未知错误");
         }
       });
     });
