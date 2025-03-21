@@ -1,4 +1,4 @@
-const { getIds, getPageData, getRes } = require("../utils/index");
+const { getIds } = require("../utils/index");
 module.exports = class ApiFox extends Generator {
   constructor(config) {
     super(config);
@@ -37,10 +37,10 @@ module.exports = class ApiFox extends Generator {
         );
 
         this.projectNames.push(`${this.projectName}(${this.indexUrl})`);
-        // if (!this.isCatIds(this.catIds)) {
-        //   resolve();
-        //   return
-        // }
+        if (!this.isCatIds(this.catIds)) {
+          resolve();
+          return;
+        }
         this.setFiles();
         const options = {
           projectName: this.projectName,
