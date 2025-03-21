@@ -1,0 +1,10 @@
+pipelines:
+  default:
+    - step:
+        script:
+          - echo "开始运行 semantic-release..."
+          - npm install
+          - npx semantic-release
+        env:
+          # 配置你的码云访问令牌
+          GITHUB_TOKEN: ${{ secrets.GITEE_TOKEN }}
