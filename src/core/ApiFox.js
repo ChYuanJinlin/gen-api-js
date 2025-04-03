@@ -28,9 +28,10 @@ module.exports = class ApiFox extends Generator {
         this.page.setDefaultTimeout(0);
         const projectClass =
           "#root > div > section > div > div.container-PJZkzQ.webContainer-sdsCoJ > div.webTitleBar-pNIDD3 > div > div.h-full.flex-1 > nav > ol > li:nth-child(2) > span.ui-breadcrumb-overlay-link.cursor-pointer > span > div > div";
-
+        if (!(await this.page.$(projectClass))) {
+          this.spinner.warn("请登录");
+        }
         await this.page.waitForSelector(projectClass);
-
         this.projectName = await this.page.$eval(
           projectClass,
           (el) => el.innerText
@@ -69,7 +70,8 @@ module.exports = class ApiFox extends Generator {
           });
         };
         let list = [],
-          currentMenus = [];
+          currentMenus = [],
+          listAll = [];
         const diff = (obj) => {
           if (obj && obj.children.length) {
             obj.children.forEach((item) => {
@@ -88,6 +90,7 @@ module.exports = class ApiFox extends Generator {
             delete obj.api;
 
             list.push(obj);
+            listAll.push(obj);
           }
         };
         menuList.forEach((item) => {
@@ -105,8 +108,7 @@ module.exports = class ApiFox extends Generator {
           await this.genAllApi(menuList, options);
         } else if (!this.opt.catIds) {
           // 如果当前没有分类只有项目则生成项目下的所有api
-          this.projectName = currentMenus.name;
-          await this.genProjectApi(currentMenus, readList, options);
+          await this.genProjectApi({ list: listAll }, readList, options);
         } else {
           // 生成某个api
           await this.genProjectMenusApi(menuList, readList, options);

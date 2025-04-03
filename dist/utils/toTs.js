@@ -79,8 +79,7 @@ function _quicktypeJSONSchema() {
         case 5:
           inputData = new InputData();
           inputData.addInput(schemaInput);
-          debugger;
-          _context.next = 10;
+          _context.next = 9;
           return quicktype({
             inputData: inputData,
             "export": true,
@@ -89,11 +88,11 @@ function _quicktypeJSONSchema() {
               "just-types": true
             }
           });
-        case 10:
+        case 9:
           _yield$quicktype = _context.sent;
           lines = _yield$quicktype.lines;
           return _context.abrupt("return", lines.join("\n"));
-        case 13:
+        case 12:
         case "end":
           return _context.stop();
       }

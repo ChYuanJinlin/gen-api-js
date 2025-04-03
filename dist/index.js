@@ -8,6 +8,7 @@ var _GenApi;
 require("./utils/Generator");
 var path = require("path");
 var ApiFox = require(path.join(__dirname, "core/ApiFox"));
+var ApiPost = require(path.join(__dirname, "core/ApiPost"));
 var YApi = require(path.join(__dirname, "core/YApi"));
 module.exports = (_GenApi = /*#__PURE__*/function () {
   function GenApi() {
@@ -20,6 +21,8 @@ module.exports = (_GenApi = /*#__PURE__*/function () {
       switch (this.docName) {
         case "apifox":
           return new ApiFox(config);
+        case "apipost":
+          return new ApiPost(config);
         case "yapi":
           return new YApi(config);
         default:

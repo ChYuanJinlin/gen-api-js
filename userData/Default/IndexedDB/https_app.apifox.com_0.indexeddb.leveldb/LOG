@@ -1,0 +1,6 @@
+2025/04/03-17:04:49.151 b30c Reusing MANIFEST D:\project\gen-api-js\userData\Default\IndexedDB\https_app.apifox.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/04/03-17:04:49.151 b30c Recovering log #3
+2025/04/03-17:04:49.161 b30c Reusing old log D:\project\gen-api-js\userData\Default\IndexedDB\https_app.apifox.com_0.indexeddb.leveldb/000003.log 
+2025/04/03-17:04:51.462 410c Level-0 table #5: started
+2025/04/03-17:04:51.475 410c Level-0 table #5: 1234342 bytes OK
+2025/04/03-17:04:51.477 410c Delete type=0 #3

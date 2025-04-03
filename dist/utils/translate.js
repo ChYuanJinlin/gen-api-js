@@ -15,7 +15,7 @@ function _genTemplateTS() {
       reqBody,
       reqType,
       method,
-      jsonSchema,
+      ReqJsonSchema,
       paramName,
       IParamsTemplate,
       template,
@@ -29,8 +29,8 @@ function _genTemplateTS() {
             if (arr.length === 0) return "";
             var start = "export interface ".concat(paramName, " {\n");
             arr.forEach(function (item) {
-              item.format = item.desc;
-              item.description = item.example;
+              item.format = item.desc || item.description;
+              item.description = item.example || item.description;
               item.name = item.name.replace(/(\..*)|\[\d\]/g, "");
               start += "".concat(translateComment(item), "\n");
               start += "".concat(item.name).concat(item.required === "1" ? ":" : "?:", " ").concat(item.type === "file" ? "File" : "string", ";\n");
@@ -39,8 +39,8 @@ function _genTemplateTS() {
           };
           typeName = _args.length > 0 && _args[0] !== undefined ? _args[0] : "ITest";
           option = _args.length > 1 ? _args[1] : undefined;
-          reqBody = option.reqBody, reqType = option.reqType, method = option.method, jsonSchema = option.jsonSchema;
-          if (!jsonSchema) {
+          reqBody = option.reqBody, reqType = option.reqType, method = option.method, ReqJsonSchema = option.ReqJsonSchema;
+          if (!ReqJsonSchema) {
             _context.next = 6;
             break;
           }
@@ -54,12 +54,12 @@ function _genTemplateTS() {
         case 8:
           paramName = typeName;
           IParamsTemplate = "";
-          if (!(method === "POST" && reqType === "json")) {
+          if (!(["PUT", "POST"].includes(method.toLocaleUpperCase()) && reqType.match("json"))) {
             _context.next = 16;
             break;
           }
           _context.next = 13;
-          return translateTempte(reqBody, paramName);
+          return Promise.resolve(translateTempte(reqBody, paramName));
         case 13:
           IParamsTemplate = _context.sent;
           _context.next = 19;

@@ -203,10 +203,14 @@ if (fs.existsSync(path.join(process.cwd(), "api.config.js"))) {
 
 // 读取配置文件
 var configs = require(path.join(process.cwd(), configPath));
-if (!configs.users.userName || !configs.users.passWord) {
-  console.log("账号或密码不能为空");
-  process.exit();
-}
+// if (
+//   (["yapi"].includes(configs.docName.toLocaleLowerCase()) &&
+//     !configs.users.userName) ||
+//   !configs.users.passWord
+// ) {
+//   console.log("账号或密码不能为空");
+//   process.exit();
+// }
 if (!/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/.test(configs.users.userName)) {
   console.log("请输入正确的邮箱号");
   process.exit();

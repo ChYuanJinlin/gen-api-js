@@ -6,13 +6,9 @@ require("core-js/stable");
 // require("regenerator-runtime/runtime");
 let configPath = "";
 let docsWebs = [];
-docsWebs = fs
-  .readdirSync(path.join(__dirname, "./", "core"))
-  .map((file) => {
-    return file.toLocaleLowerCase().replace(".js", "");
-  });
-
-
+docsWebs = fs.readdirSync(path.join(__dirname, "./", "core")).map((file) => {
+  return file.toLocaleLowerCase().replace(".js", "");
+});
 
 if (fs.existsSync(path.join(process.cwd(), "api.config.js"))) {
   configPath = "api.config.js";
@@ -25,10 +21,14 @@ if (fs.existsSync(path.join(process.cwd(), "api.config.js"))) {
 
 // 读取配置文件
 const configs = require(path.join(process.cwd(), configPath));
-if (!configs.users.userName || !configs.users.passWord) {
-  console.log("账号或密码不能为空");
-  process.exit();
-}
+// if (
+//   (["yapi"].includes(configs.docName.toLocaleLowerCase()) &&
+//     !configs.users.userName) ||
+//   !configs.users.passWord
+// ) {
+//   console.log("账号或密码不能为空");
+//   process.exit();
+// }
 if (
   !/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/.test(
     configs.users.userName
@@ -41,7 +41,6 @@ if (!configs.docUrl) {
   console.log("docUrl字段必填");
   process.exit();
 }
-
 
 configs.docName = configs.docName || "yapi";
 if (!docsWebs.includes(configs.docName)) {

@@ -42,8 +42,7 @@ module.exports = /*#__PURE__*/function (_global$Generator) {
             case 0:
               return _context4.abrupt("return", new Promise(/*#__PURE__*/function () {
                 var _ref = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee3(resolve, reject) {
-                  var _this2$page;
-                  var c, _this2$cacheData$_thi, oldCatIds, _this2$cacheData$_thi2;
+                  var _this2$cacheData$_thi, oldCatIds, _this2$cacheData$_thi2;
                   return _regenerator.default.wrap(function _callee3$(_context3) {
                     while (1) switch (_context3.prev = _context3.next) {
                       case 0:
@@ -62,45 +61,26 @@ module.exports = /*#__PURE__*/function (_global$Generator) {
                         });
                       case 8:
                         _context3.next = 10;
-                        return _this2.page.waitForSelector("#email");
+                        return _this2.page.$("#yapi > div > div.router-main > div.header-box.m-header.ant-layout-header");
                       case 10:
-                        _context3.next = 12;
-                        return _this2.page.type("#email", _this2.userName);
+                        if (_context3.sent) {
+                          _context3.next = 12;
+                          break;
+                        }
+                        _this2.spinner.warn("请登录");
                       case 12:
                         _context3.next = 14;
-                        return _this2.page.type("#password", _this2.passWord);
+                        return _this2.page.waitForSelector("#yapi > div > div.router-main > div.header-box.m-header.ant-layout-header");
                       case 14:
                         _context3.next = 16;
-                        return _this2.page.keyboard.press("Enter");
-                      case 16:
-                        _context3.next = 18;
-                        return _this2.request(_this2.config.docUrl + "/api/user/login");
-                      case 18:
-                        _context3.next = 20;
-                        return _this2.page.cookies();
-                      case 20:
-                        c = _context3.sent;
-                        _this2.cookies = c.map(function (item) {
-                          return {
-                            name: item.name,
-                            value: item.value
-                          };
-                        });
-                        _context3.next = 24;
-                        return (_this2$page = _this2.page).setCookie.apply(_this2$page, (0, _toConsumableArray2.default)(_this2.cookies));
-                      case 24:
-                        _context3.next = 26;
-                        return _this2.page.waitForSelector("#yapi > div > div.router-main > div.header-box.m-header.ant-layout-header");
-                      case 26:
-                        _context3.next = 28;
                         return getPageData(_this2.page, _this2.config.docUrl + "/api/project/get?id=".concat(opt.projectId), _this2.spinner);
-                      case 28:
+                      case 16:
                         _this2.opt = opt;
                         _this2.catIds = opt.catIds;
                         _this2.projectId = opt.projectId;
                         _this2.index = index;
                         if (!(opt.catIds && Array.isArray(opt.catIds))) {
-                          _context3.next = 40;
+                          _context3.next = 28;
                           break;
                         }
                         oldCatIds = ((_this2$cacheData$_thi = _this2.cacheData[_this2.cacheKey.name]) === null || _this2$cacheData$_thi === void 0 || (_this2$cacheData$_thi = _this2$cacheData$_thi[index]) === null || _this2$cacheData$_thi === void 0 ? void 0 : _this2$cacheData$_thi.ids) || [];
@@ -110,31 +90,31 @@ module.exports = /*#__PURE__*/function (_global$Generator) {
                           });
                         });
                         if (_this2.catIds.length) {
-                          _context3.next = 38;
+                          _context3.next = 26;
                           break;
                         }
                         resolve();
                         return _context3.abrupt("return", false);
-                      case 38:
-                        _context3.next = 43;
+                      case 26:
+                        _context3.next = 31;
                         break;
-                      case 40:
+                      case 28:
                         if (!((_this2$cacheData$_thi2 = _this2.cacheData[_this2.cacheKey.name]) !== null && _this2$cacheData$_thi2 !== void 0 && _this2$cacheData$_thi2[index] && _this2.cacheData[_this2.cacheKey.name][index].pid)) {
-                          _context3.next = 43;
+                          _context3.next = 31;
                           break;
                         }
                         resolve();
                         return _context3.abrupt("return", false);
-                      case 43:
+                      case 31:
                         // 判单当前是否选过文件,如果选过文件把当前选过的文件加载第一项
                         if (_this2.selectName) {
                           _this2.files = (0, _toConsumableArray2.default)(new Set([_this2.selectName].concat((0, _toConsumableArray2.default)(_this2.files))));
                         }
-                        _context3.prev = 44;
+                        _context3.prev = 32;
                         _this2.apiUrl = _this2.getUrl().indexUrl;
-                        _context3.next = 48;
+                        _context3.next = 36;
                         return _this2.page.goto(_this2.apiUrl);
-                      case 48:
+                      case 36:
                         // 监听当前接口返回数据
                         _this2.getData("/api/interface/list_menu?project_id=".concat(opt.projectId)).then(/*#__PURE__*/function () {
                           var _ref2 = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee2(menuList) {
@@ -159,6 +139,7 @@ module.exports = /*#__PURE__*/function (_global$Generator) {
                                   readList = function readList(lIndex, item) {
                                     return new Promise(/*#__PURE__*/function () {
                                       var _ref3 = (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee(resolve) {
+                                        var _JSON$parse;
                                         var data;
                                         return _regenerator.default.wrap(function _callee$(_context) {
                                           while (1) switch (_context.prev = _context.next) {
@@ -167,8 +148,12 @@ module.exports = /*#__PURE__*/function (_global$Generator) {
                                               return getPageData(_this2.page, _this2.config.docUrl + "/api/interface/get?id=".concat(item._id), _this2.spinner);
                                             case 2:
                                               data = _context.sent;
+                                              data.reqBody = data.req_body_form.length ? data.req_body_form : data.req_params.length ? data.req_params : data.req_query.length ? data.req_query : data.req_body_other;
+                                              data.reqType = data.req_body_type;
+                                              data.ReqJsonSchema = data.req_body_is_json_schema;
+                                              data.ResJsonSchema = data.res_body ? JSON.stringify((_JSON$parse = JSON.parse(data.res_body)) === null || _JSON$parse === void 0 || (_JSON$parse = _JSON$parse.properties) === null || _JSON$parse === void 0 ? void 0 : _JSON$parse.data) : "";
                                               resolve(data);
-                                            case 4:
+                                            case 8:
                                             case "end":
                                               return _context.stop();
                                           }
@@ -299,17 +284,17 @@ module.exports = /*#__PURE__*/function (_global$Generator) {
                             return _ref2.apply(this, arguments);
                           };
                         }());
-                        _context3.next = 54;
+                        _context3.next = 42;
                         break;
-                      case 51:
-                        _context3.prev = 51;
-                        _context3.t0 = _context3["catch"](44);
+                      case 39:
+                        _context3.prev = 39;
+                        _context3.t0 = _context3["catch"](32);
                         console.log(_context3.t0);
-                      case 54:
+                      case 42:
                       case "end":
                         return _context3.stop();
                     }
-                  }, _callee3, null, [[44, 51]]);
+                  }, _callee3, null, [[32, 39]]);
                 }));
                 return function (_x3, _x4) {
                   return _ref.apply(this, arguments);

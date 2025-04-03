@@ -72,15 +72,16 @@ global.Generator = class Generator {
         args: ["--start-maximized"],
         ignoreDefaultArgs: ["--enable-automation"],
         executablePath: puppeteer.executablePath("chrome"),
+        userDataDir: "./userData", // 设置用户数据目录
       };
       config.puppeteerOpt = Object.assign(
         {
           method: "launch",
           run(puppeteer) {
             return {
-              headless: config.debug ? !config.debug : true,
+              headless: false,
               devtools: config.debug ? !config.debug : true,
-              timeout: 0,
+              // timeout: 0,
               ...defaultOptions,
               // slowMo: 50,
             };
@@ -92,7 +93,7 @@ global.Generator = class Generator {
       this.browser = await puppeteer[config.puppeteerOpt.method](
         Object.assign(defaultOptions, config.puppeteerOpt.run(puppeteer))
       );
-      this.berforeInit(config);
+      this.#run(config);
     })();
     this.spinner = ora({
       text: `正在生成中...`,
@@ -101,8 +102,6 @@ global.Generator = class Generator {
         frames: ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"],
       },
     });
-
-    this.spinner.start();
   }
   // 设置url
   setDocUrl(url) {
@@ -124,7 +123,8 @@ global.Generator = class Generator {
   }
   isCatIds(catIds) {
     if (catIds && Array.isArray(catIds)) {
-      const oldCatIds = this.cacheData[this.cacheKey.name]?.[index]?.ids || [];
+      const oldCatIds =
+        this.cacheData[this.cacheKey.name]?.[this.index]?.ids || [];
 
       this.catIds = catIds.filter(
         (item) => !oldCatIds.some((s) => getIds(s) === getIds(item))
@@ -147,7 +147,7 @@ global.Generator = class Generator {
       this.files = [...new Set([this.selectName, ...this.files])];
     }
   }
-  berforeInit() {
+  #run() {
     this.config.projects.reduce(async (promise, item, index) => {
       if (typeof item == "object" && !item.projectId) {
         spinner.fail(`projectId不能为空:`);
@@ -293,6 +293,7 @@ global.Generator = class Generator {
           choices: this.files,
         },
       ]);
+      this.spinner.start();
       this.selectName = type;
       if (path.extname(this.selectName) === ".ts") {
         this.config.typescript = true;
@@ -320,6 +321,7 @@ global.Generator = class Generator {
           const item = data.list[lIndex];
           // 如果没有重复的项则生成
           if (
+            item.path &&
             /\w/g.test(item.path) &&
             (flag ||
               (!this.paths.some(

@@ -1,11 +1,5 @@
 /* 参考文档:https://www.npmjs.com/package/gen-api-js */
 module.exports = {
-  // 在线文档的账户信息
-  users: {
-    userName: "",
-    passWord: "",
-  },
-
   docName: "", // 在线文档网站名称
   // debug: false,//是否开启调试
   docUrl: "", //在线文档网站地址

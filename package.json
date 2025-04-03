@@ -19,11 +19,10 @@
   "files": [
     "dist/",
     "package.json",
-    "yapi.png",
     "LICENSE",
+    "api.config.md",
     "README.md",
-    "CHANGELOG.md",
-    "bin/"
+    "CHANGELOG.md"
   ],
   "keywords": [
     "简易api接口生成器",
@@ -36,7 +35,8 @@
     "批量生API",
     "一键生成接口",
     "轻量化",
-    "yapi"
+    "yapi",
+    "apifox"
   ],
   "homepage": "",
   "author": "1075360356@qq.com",

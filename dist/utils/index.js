@@ -77,6 +77,7 @@ module.exports = {
    * @param {*} spinner:
    */
   getRes: function getRes(page, url, spinner) {
+    var _this = this;
     return (0, _asyncToGenerator2.default)(/*#__PURE__*/_regenerator.default.mark(function _callee3() {
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
@@ -108,7 +109,9 @@ module.exports = {
                                 _context.next = 9;
                                 break;
                               case 8:
-                                return _context.abrupt("return", false);
+                                if (res.status() === 500) {
+                                  _this.spinner.fail("未知错误");
+                                }
                               case 9:
                               case "end":
                                 return _context.stop();

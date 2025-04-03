@@ -1,0 +1,93 @@
+{
+  "name": "gen-api-js",
+  "version": "0.0.7",
+  "description": "根据线上接口文档轻量化简易一键批量生成模块化 JavaScript/TypeScript API接口",
+  "bin": {
+    "gen-api": "./cli/cli.js"
+  },
+  "module": "es2022",
+  "main": "./index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "commit": "git add . && git-cz",
+    "start": "npm run build  && npx gen-api",
+    "copy-config": "ncp src/config dist/config",
+    "upload": "npm run build &&  npm publish",
+    "build": "node src/scripts/build.js && babel src --out-dir dist && npm run copy-config",
+    "push": "git add . && npm run commit && npx release-it "
+  },
+  "files": [
+    "dist/",
+    "package.json",
+    "LICENSE",
+    "api.config.md",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "keywords": [
+    "简易api接口生成器",
+    "接口生成器",
+    "api",
+    "线上接口文档生成",
+    "生成javascript或typescript接口代码",
+    "yapi接口生成器",
+    "批量生成接口",
+    "批量生API",
+    "一键生成接口",
+    "轻量化",
+    "yapi",
+    "apifox"
+  ],
+  "homepage": "",
+  "author": "1075360356@qq.com",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/ChYuanJinlin/gen-api-js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime": "^7.26.0",
+    "@release-it/conventional-changelog": "^8.0.1",
+    "commander": "^7.2.0",
+    "core-js": "^3.39.0",
+    "dotenv": "^16.4.5",
+    "inquirer": "^6.5.2",
+    "node-cache": "^5.1.2",
+    "ora": "^3.4.0",
+    "puppeteer-core": "^20.4.0",
+    "quicktype-core": "^23.0.170"
+  },
+  "engines": {
+    "node": ">=14.15.0",
+    "npm": ">=6.14.8"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.25.9",
+    "@babel/core": "^7.26.0",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
+    "@babel/plugin-proposal-private-methods": "^7.18.6",
+    "@babel/plugin-transform-modules-commonjs": "^7.25.9",
+    "@babel/plugin-transform-runtime": "^7.25.9",
+    "@babel/preset-env": "^7.26.0",
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@types/node": "^22.9.1",
+    "babel-plugin-module-resolver": "^5.0.2",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^9.1.7",
+    "ncp": "^2.0.0",
+    "prettier": "^3.2.5",
+    "release-it": "^17.2.1",
+    "semantic-release": "^24.2.0",
+    "standard-version": "^9.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

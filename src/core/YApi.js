@@ -28,22 +28,30 @@ module.exports = class YApi extends global.Generator {
       });
 
       // 输入账号密码
-      await this.page.waitForSelector("#email");
-      await this.page.type("#email", this.userName);
-      await this.page.type("#password", this.passWord);
-      await this.page.keyboard.press("Enter");
-      await this.request(this.config.docUrl + "/api/user/login");
-      const c = await this.page.cookies();
-      this.cookies = c.map((item) => ({
-        name: item.name,
-        value: item.value,
-      }));
+      // await this.page.waitForSelector("#email");
+      // await this.page.type("#email", this.userName);
+      // await this.page.type("#password", this.passWord);
+      // await this.page.keyboard.press("Enter");
+      // await this.request(this.config.docUrl + "/api/user/login");
+      // const c = await this.page.cookies();
+      // this.cookies = c.map((item) => ({
+      //   name: item.name,
+      //   value: item.value,
+      // }));
 
-      await this.page.setCookie(...this.cookies);
+      // await this.page.setCookie(...this.cookies);
+      if (
+        !(await this.page.$(
+          "#yapi > div > div.router-main > div.header-box.m-header.ant-layout-header"
+        ))
+      ) {
+        this.spinner.warn("请登录");
+      }
       // 等待登录之后出现的头部
       await this.page.waitForSelector(
         "#yapi > div > div.router-main > div.header-box.m-header.ant-layout-header"
       );
+
       await getPageData(
         this.page,
         this.config.docUrl + `/api/project/get?id=${opt.projectId}`,
@@ -119,9 +127,7 @@ module.exports = class YApi extends global.Generator {
               data.reqType = data.req_body_type;
               data.ReqJsonSchema = data.req_body_is_json_schema;
               data.ResJsonSchema = data.res_body
-                ? JSON.stringify(
-                    JSON.parse(data.res_body)?.properties?.data
-                  )
+                ? JSON.stringify(JSON.parse(data.res_body)?.properties?.data)
                 : "";
               resolve(data);
             });
