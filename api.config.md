@@ -275,16 +275,19 @@
 
     项目的唯一标识。支持多个项目
 
-获取方式：打开项目 -> 点开分类 -> 获取projectId 复制浏览器地址栏project/后面的数字 分类ID获取 复制/api/cat\_ 后面的数字。
+
 
 #### YApi示例:
+
+获取方式：打开项目 -> 点开分类 -> 获取projectId 复制浏览器地址栏project/后面的数字 分类ID获取 复制/api/cat\_ 后面的数字。
 
 ![yapi](https://www.freeimg.cn/i/2024/03/30/6608256ba2716.png)
 
 
-获取方式：打开项目 -> 点开分类 -> 获取projectId 复制浏览器地址栏project/后面的数字。
+
 
 #### ApiFox示例:
+获取方式：打开项目 -> 点开分类 -> 获取projectId 复制浏览器地址栏project/后面的数字。
 ![apifox](https://s1.imagehub.cc/images/2025/04/03/2d385627a8f6b1c5fade9fdca9d2f59f.jpeg)
 
 分类ID获取 点击菜单找到基本信息  目录ID
