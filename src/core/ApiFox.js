@@ -28,7 +28,7 @@ module.exports = class ApiFox extends Generator {
         this.page.setDefaultTimeout(0);
         const projectClass =
           "#root > div > section > div > div.container-PJZkzQ.webContainer-sdsCoJ > div.webTitleBar-pNIDD3 > div > div.h-full.flex-1 > nav > ol > li:nth-child(2) > span.ui-breadcrumb-overlay-link.cursor-pointer > span > div > div";
-        if (!(await this.page.$(projectClass))) {
+        if ((await this.page.$('#root > div > div > div.content-w8on4p > div > div > div > div'))) {
           this.spinner.warn("请登录");
         }
         await this.page.waitForSelector(projectClass);

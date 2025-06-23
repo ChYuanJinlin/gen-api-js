@@ -1,2 +1,3 @@
-2025/04/03-17:02:24.010 a6d0 Creating DB D:\project\gen-api-js\userData\Default\Session Storage since it was missing.
-2025/04/03-17:02:24.019 a6d0 Reusing MANIFEST D:\project\gen-api-js\userData\Default\Session Storage/MANIFEST-000001
+2025/06/23-15:39:44.087 11d40 Reusing MANIFEST D:\yjl\gen-api-js\userData\Default\Session Storage/MANIFEST-000001
+2025/06/23-15:39:44.088 11d40 Recovering log #3
+2025/06/23-15:39:44.091 11d40 Reusing old log D:\yjl\gen-api-js\userData\Default\Session Storage/000003.log 

@@ -9,8 +9,14 @@ const [configData, axiosData] = getFileData(
   "../config/axios.js"
 );
 if (process.argv.length > 2) {
+  // 获取当前项目的 package.json 路径
+  const pkgPath = path.join(__dirname, "../../package.json");
+  let pkg = {};
+  if (fs.existsSync(pkgPath)) {
+    pkg = require(pkgPath);
+  }
   program
-    .version(require("../package.json").version)
+    .version(pkg.version)
     .description("API文档生成工具");
 
   program

@@ -1,2 +1,3 @@
-2025/04/03-17:02:24.017 a9f8 Creating DB D:\project\gen-api-js\userData\Default\shared_proto_db\metadata since it was missing.
-2025/04/03-17:02:24.037 a9f8 Reusing MANIFEST D:\project\gen-api-js\userData\Default\shared_proto_db\metadata/MANIFEST-000001
+2025/06/23-15:39:44.006 11958 Reusing MANIFEST D:\yjl\gen-api-js\userData\Default\shared_proto_db\metadata/MANIFEST-000001
+2025/06/23-15:39:44.007 11958 Recovering log #3
+2025/06/23-15:39:44.007 11958 Reusing old log D:\yjl\gen-api-js\userData\Default\shared_proto_db\metadata/000003.log 

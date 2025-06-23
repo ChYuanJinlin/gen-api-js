@@ -1,42 +1,28 @@
 {
   "name": "gen-api-js",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "根据线上接口文档轻量化简易一键批量生成模块化 JavaScript/TypeScript API接口",
   "bin": {
-    "gen-api": "./dist/cli/cli.js"
+    "gen-api": "dist/cli/cli.js"
   },
   "module": "es2022",
-  "main": "./dist/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "commit": "git add . && git-cz",
+    "update-package-json": "node src/scripts/update-package-json.js",
     "start": "npm run build  && npx gen-api",
-    "copy-config": "ncp src/config dist/config",
-    "upload": "npm run build &&  npm publish",
-    "build": "node src/scripts/build.js && babel src --out-dir dist && npm run copy-config",
+    "copy-config": "ncp src/config dist/dist/config && ncp README.md dist/README.md && ncp api.config.md dist/api.config.md ",
+    "upload": "npm run build && cd dist && npm publish",
+    "build": "node src/scripts/build.js && babel src --out-dir dist/dist && npm run copy-config && npm run update-package-json ",
     "push": "git add . && npm run commit && npx release-it "
   },
-  "files": [
+  "keywords": [
     "dist/",
     "package.json",
-    "LICENSE",
     "api.config.md",
     "README.md",
     "CHANGELOG.md"
-  ],
-  "keywords": [
-    "简易api接口生成器",
-    "接口生成器",
-    "api",
-    "线上接口文档生成",
-    "生成javascript或typescript接口代码",
-    "yapi接口生成器",
-    "批量生成接口",
-    "批量生API",
-    "一键生成接口",
-    "轻量化",
-    "yapi",
-    "apifox"
   ],
   "homepage": "",
   "author": "1075360356@qq.com",
@@ -89,5 +75,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }

@@ -17,7 +17,7 @@ const {
 const { jsonSchemaToTs } = require("./toTs");
 const { genTemplateTS } = require("./translate.js");
 const cache = require("./cache");
-const cacheKey = require(path.join(process.cwd(), "package.json"));
+const cacheKey = require(path.join(__dirname, "../../package.json"));
 const specialChat = /\/|\d|\/\d|\/\$|\{|\}/g;
 global.Generator = class Generator {
   constructor(config) {
@@ -46,10 +46,10 @@ global.Generator = class Generator {
     this.selectName = "";
     // 生成缓存数据的文件
     cache.setCacheFileName(config.cacheFileName);
-    // 账号
-    this.userName = config.users.userName;
-    // 密码
-    this.passWord = config.users.passWord;
+    // // 账号
+    // this.userName = config.users.userName;
+    // // 密码
+    // this.passWord = config.users.passWord;
     this.cookies = [];
     // 缓存
     this.cacheData = cache.getCache();
@@ -72,7 +72,7 @@ global.Generator = class Generator {
         args: ["--start-maximized"],
         ignoreDefaultArgs: ["--enable-automation"],
         executablePath: puppeteer.executablePath("chrome"),
-        userDataDir: "./userData", // 设置用户数据目录
+        userDataDir:path.join(process.cwd(), "userData"), // 设置用户数据目录
       };
       config.puppeteerOpt = Object.assign(
         {

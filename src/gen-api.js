@@ -29,14 +29,14 @@ const configs = require(path.join(process.cwd(), configPath));
 //   console.log("账号或密码不能为空");
 //   process.exit();
 // }
-if (
-  !/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/.test(
-    configs.users.userName
-  )
-) {
-  console.log("请输入正确的邮箱号");
-  process.exit();
-}
+// if (
+//   !/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/.test(
+//     configs.users.userName
+//   )
+// ) {
+//   console.log("请输入正确的邮箱号");
+//   process.exit();
+// }
 if (!configs.docUrl) {
   console.log("docUrl字段必填");
   process.exit();
